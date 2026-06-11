@@ -1,0 +1,104 @@
+{% extends 'painel/base.html' %}
+
+{% block title %}Pedido #{{ pedido.id }}{% endblock %}
+
+{% block extra_css %}
+.btn-voltar { color: #999; text-decoration: none; font-size: 0.78rem; letter-spacing: 1px; text-transform: uppercase; }
+.info-linha { display: flex; justify-content: space-between; margin-bottom: 0.8rem; font-size: 0.88rem; gap: 1rem; }
+.info-linha span:first-child { color: #999; font-size: 0.78rem; letter-spacing: 1px; text-transform: uppercase; flex-shrink: 0; }
+.info-linha span:last-child { text-align: right; word-break: break-word; }
+.total-linha { display: flex; justify-content: space-between; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #f0f0f0; }
+.total-linha span:first-child { color: #999; font-size: 0.78rem; letter-spacing: 1px; text-transform: uppercase; }
+.total-linha span:last-child { font-style: italic; font-size: 1.2rem; }
+
+/* Cards de itens do pedido — sem usar a tabela global do base.html */
+.item-card { background: #faf8f5; border-radius: 6px; padding: 1rem; margin-bottom: 0.8rem; font-size: 0.88rem; }
+.item-card-nome { font-weight: 600; margin-bottom: 0.5rem; color: #1a1a1a; }
+.item-card-linha { display: flex; justify-content: space-between; color: #666; padding: 0.2rem 0; font-size: 0.82rem; }
+.item-card-linha span:first-child { color: #999; text-transform: uppercase; letter-spacing: 0.8px; font-size: 0.72rem; }
+
+/* Rastreio mobile-friendly */
+.rastreio-form { display: flex; flex-direction: column; gap: 1rem; }
+.rastreio-btns { display: flex; gap: 0.8rem; flex-wrap: wrap; }
+.btn-salvar-rastreio { padding: 0.85rem 1.5rem; border: none; cursor: pointer; font-size: 0.78rem; letter-spacing: 1px; text-transform: uppercase; border-radius: 4px; font-family: 'Georgia', serif; flex: 1; min-width: 140px; }
+
+@media (max-width: 768px) {
+  .grid-dados { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1rem; }
+}
+@media (min-width: 769px) {
+  .grid-dados { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+}
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h2>Pedido #{{ pedido.id }}</h2>
+  <a href="{% url 'painel:pedidos_lista' %}" class="btn-voltar">← Voltar</a>
+</div>
+
+<div class="grid-dados">
+  <div class="secao">
+    <h3 style="font-size:0.72rem; letter-spacing:2px; text-transform:uppercase; color:#999; margin-bottom:1.2rem; padding-bottom:0.8rem; border-bottom:1px solid #f0f0f0;">Dados do Cliente</h3>
+    <div class="info-linha"><span>Nome</span><span>{{ pedido.nome }}</span></div>
+    <div class="info-linha"><span>Email</span><span>{{ pedido.email }}</span></div>
+    <div class="info-linha"><span>Telefone</span><span>{{ pedido.telefone|default:"—" }}</span></div>
+    <div class="info-linha"><span>Data</span><span>{{ pedido.criado_em|date:"d/m/Y H:i" }}</span></div>
+  </div>
+
+  <div class="secao">
+    <h3 style="font-size:0.72rem; letter-spacing:2px; text-transform:uppercase; color:#999; margin-bottom:1.2rem; padding-bottom:0.8rem; border-bottom:1px solid #f0f0f0;">Endereço de Entrega</h3>
+    <p style="font-size:0.88rem; color:#444; line-height:1.7;">{{ pedido.endereco }}</p>
+  </div>
+</div>
+
+<div class="secao">
+  <h3 style="font-size:0.72rem; letter-spacing:2px; text-transform:uppercase; color:#999; margin-bottom:1.2rem; padding-bottom:0.8rem; border-bottom:1px solid #f0f0f0;">Itens do Pedido</h3>
+
+  {% for item in pedido.itens.all %}
+  <div class="item-card">
+    <div class="item-card-nome">{{ item.produto.nome }}</div>
+    <div class="item-card-linha"><span>Tamanho</span><span>{{ item.tamanho|default:"—" }}</span></div>
+    <div class="item-card-linha"><span>Preço unit.</span><span>R$ {{ item.preco_unitario }}</span></div>
+    <div class="item-card-linha"><span>Quantidade</span><span>{{ item.quantidade }}</span></div>
+    <div class="item-card-linha"><span>Subtotal</span><span>R$ {{ item.preco_total }}</span></div>
+  </div>
+  {% endfor %}
+
+  <div class="total-linha">
+    <span>Total</span>
+    <span>R$ {{ pedido.total }}</span>
+  </div>
+
+  <!-- RASTREIO -->
+  <div style="margin-top:1.5rem; border-top:1px solid #f0f0f0; padding-top:1.5rem;">
+    <h3 style="font-size:0.72rem; letter-spacing:2px; text-transform:uppercase; color:#999; margin-bottom:1.2rem;">Código de Rastreio</h3>
+    {% if pedido.rastreio_enviado %}
+    <div class="info-linha">
+      <span>Código</span>
+      <span>{{ pedido.codigo_rastreio }}</span>
+    </div>
+    <p style="font-size:0.78rem; color:#999; margin-top:0.5rem;">✓ E-mail de rastreio já enviado ao cliente.</p>
+    {% else %}
+    <form method="post" action="{% url 'painel:salvar_rastreio' pedido.id %}" class="rastreio-form">
+      {% csrf_token %}
+      <div>
+        <label style="display:block; font-size:0.72rem; letter-spacing:1px; text-transform:uppercase; color:#999; margin-bottom:0.5rem;">Código</label>
+        <input type="text" name="codigo_rastreio" value="{{ pedido.codigo_rastreio }}"
+               placeholder="Ex: BR123456789BR"
+               style="width:100%; padding:0.9rem 1rem; border:1px solid #ddd; font-family:'Georgia',serif; font-size:1rem; border-radius:4px;">
+      </div>
+      <div class="rastreio-btns">
+        <button type="submit" name="acao" value="salvar" class="btn-salvar-rastreio"
+                style="background:#f5f0eb; color:#333;">
+          Salvar
+        </button>
+        <button type="submit" name="acao" value="salvar_e_enviar" class="btn-salvar-rastreio"
+                style="background:#962b68; color:white;">
+          Salvar e Enviar E-mail
+        </button>
+      </div>
+    </form>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

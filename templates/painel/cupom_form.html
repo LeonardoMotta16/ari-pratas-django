@@ -1,0 +1,41 @@
+{% extends 'painel/base.html' %}
+
+{% block title %}{% if cupom %}Editar Cupom{% else %}Novo Cupom{% endif %}{% endblock %}
+
+{% block extra_css %}
+.form-box { background:white; padding:2rem; box-shadow:0 2px 10px rgba(0,0,0,0.06); max-width:500px; }
+.form-grupo { margin-bottom:1.5rem; }
+.form-grupo label { display:block; font-size:0.78rem; letter-spacing:1px; text-transform:uppercase; color:#999; margin-bottom:0.5rem; }
+.form-grupo input { width:100%; padding:0.8rem 1rem; border:1px solid #ddd; border-radius:6px; font-family:'Georgia',serif; font-size:0.9rem; }
+.checkbox-row { display:flex; align-items:center; gap:0.5rem; margin-bottom:1.5rem; }
+.btn-salvar { background:#962b68; color:white; padding:0.9rem 2.5rem; border:none; font-family:'Georgia',serif; font-size:0.82rem; letter-spacing:2px; text-transform:uppercase; cursor:pointer; }
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h2>{% if cupom %}Editar Cupom{% else %}Novo Cupom{% endif %}</h2>
+  <a href="{% url 'painel:cupons_lista' %}" style="color:#999; text-decoration:none; font-size:0.78rem; letter-spacing:1px; text-transform:uppercase;">← Voltar</a>
+</div>
+
+<div class="form-box">
+  <form method="post">
+    {% csrf_token %}
+    <div class="form-grupo">
+      <label>Código</label>
+      <input type="text" name="codigo" value="{{ cupom.codigo|default:'' }}" placeholder="Ex: ARIPRATAS10" required>
+    </div>
+    <div class="form-grupo">
+      <label>Desconto (%)</label>
+      <input type="number" name="desconto" value="{{ cupom.desconto|default:'' }}" min="1" max="100" required>
+    </div>
+    <div class="checkbox-row">
+      <input type="checkbox" name="ativo" id="ativo" {% if cupom.ativo or not cupom %}checked{% endif %}>
+      <label for="ativo" style="margin:0; text-transform:none; font-size:0.9rem; color:#444;">Cupom ativo</label>
+    </div>
+    <div style="display:flex; gap:1rem;">
+      <button type="submit" class="btn-salvar">Salvar</button>
+      <a href="{% url 'painel:cupons_lista' %}" style="padding:0.9rem 2rem; background:#eee; color:#333; text-decoration:none; font-size:0.82rem; letter-spacing:1px; text-transform:uppercase;">Cancelar</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

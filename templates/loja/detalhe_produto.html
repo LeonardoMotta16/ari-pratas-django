@@ -1,0 +1,249 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ produto.nome }} — Ari Pratas{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="detalhe-grid">
+
+    <!-- GALERIA -->
+    <div class="galeria-wrapper">
+      <div class="miniaturas-col">
+        {% for img in produto.imagens.all %}
+        <img src="{{ img.imagem.url }}" alt="{{ produto.nome }}"
+             data-url="{{ img.imagem.url }}"
+             class="miniatura {% if forloop.first %}ativa{% endif %}">
+        {% endfor %}
+      </div>
+
+      {% if produto.imagem_principal %}
+      <img id="imagem-principal" src="{{ produto.imagem_principal.imagem.url }}"
+           alt="{{ produto.nome }}" class="imagem-principal">
+      {% else %}
+      <div class="imagem-principal imagem-principal--placeholder" role="img" aria-label="{{ produto.nome }}">💎</div>
+      {% endif %}
+    </div>
+
+    <!-- INFORMAÇÕES -->
+    <div>
+      <p class="detalhe-categoria">{{ produto.categoria.nome }}</p>
+      <h1 class="detalhe-titulo">{{ produto.nome }}</h1>
+
+      {% if produto.fora_estoque %}
+
+      <!-- FORA DE ESTOQUE: só o aviso, sem mais nada -->
+      <div class="estoque-aviso">
+        <p class="estoque-aviso__titulo">Produto sem estoque ou indisponível</p>
+        <p class="estoque-aviso__texto">Cadastre o seu e-mail que avisaremos quando estiver disponível!</p>
+        <form method="post" action="{% url 'loja:aviso_estoque' produto.id %}">
+          {% csrf_token %}
+          <div style="display:flex; gap:0.5rem; width:100%; max-width:380px; margin-top:0.5rem;">
+            <input type="email" name="email" placeholder="seu@email.com" required
+                   style="flex:1; min-width:0; padding:0.75rem 1rem; border:1.5px solid #ddd;
+                          border-radius:8px; font-family:inherit; font-size:0.9rem;
+                          color:#2c2c2c; background:white; outline:none;
+                          margin-top: 2rem;">
+            <button type="submit"
+                    style="padding:0.75rem 1.25rem; background:#962b68; color:white; border:none;
+                           border-radius:8px; font-family:inherit; font-size:0.85rem; font-weight:600;
+                           letter-spacing:0.5px; cursor:pointer; white-space:nowrap; flex-shrink:0;
+                           margin-top: 2rem;">
+              Avisar-me
+            </button>
+          </div>
+        </form>
+      </div>
+
+      {% else %}
+
+      <!-- DISPONÍVEL: preço, tamanhos e botão -->
+      <div class="detalhe-preco-wrapper">
+        {% if produto.promocao_ativa and produto.preco %}
+        <span class="preco-original">R$ {{ produto.preco_original }}</span>
+        <span class="preco detalhe-preco">R$ {{ produto.preco_final }}</span>
+        {% else %}
+        <span class="preco detalhe-preco">R$ {{ produto.preco_final }}</span>
+        {% endif %}
+        {% if produto.desconto %}
+        <span class="badge badge-desconto">-{{ produto.desconto }}%</span>
+        {% endif %}
+      </div>
+
+      <p class="detalhe-descricao">{{ produto.descricao }}</p>
+
+      {% if tamanhos %}
+      <div style="margin-bottom:1.5rem;">
+        <p class="tamanhos-label">Tamanho</p>
+        <div class="tamanhos-grid" id="tamanhos-container">
+          {% for tamanho in tamanhos %}
+          <button type="button" data-tamanho="{{ tamanho }}"
+                  class="btn-tamanho">{{ tamanho }}</button>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      <form method="post" action="{% url 'loja:adicionar_carrinho' produto.id %}" id="form-carrinho">
+        {% csrf_token %}
+        <input type="hidden" name="tamanho" id="tamanho-selecionado" value="">
+        <button type="submit" class="btn-primary btn-block" style="margin-bottom:2rem; border:none; cursor:pointer;">
+          Adicionar ao Carrinho
+        </button>
+      </form>
+
+      {% endif %}
+
+      {% if not produto.fora_estoque %}
+      <!-- COMPARTILHAR -->
+      <div style="margin-bottom:2rem;">
+        <p class="compartilhar-titulo">Compartilhar</p>
+        <div class="compartilhar-btns">
+          <a href="https://wa.me/?text=Olha%20que%20lindo%20esse%20produto%20da%20Ari%20Pratas:%20{{ produto.nome|urlencode }}%20👉%20{{ request.build_absolute_uri|urlencode }}"
+             target="_blank" class="btn-share btn-share--whatsapp">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" viewBox="0 0 24 24">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+              <path d="M12 0C5.373 0 0 5.373 0 12c0 2.136.564 4.14 1.546 5.877L.057 23.428a.5.5 0 0 0 .609.61l5.652-1.475A11.937 11.937 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.882a9.88 9.88 0 0 1-5.031-1.378l-.361-.214-3.735.975.999-3.635-.235-.374A9.868 9.868 0 0 1 2.118 12C2.118 6.533 6.533 2.118 12 2.118S21.882 6.533 21.882 12 17.467 21.882 12 21.882z"/>
+            </svg>
+            WhatsApp
+          </a>
+
+          <a href="https://www.instagram.com/pratas_daari/" target="_blank"
+             class="btn-share btn-share--instagram">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" viewBox="0 0 24 24">
+              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.334 3.608 1.31.975.975 1.247 2.242 1.31 3.608.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.062 1.366-.334 2.633-1.31 3.608-.975.975-2.242 1.247-3.608 1.31-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.366-.062-2.633-.334-3.608-1.31-.975-.975-1.247-2.242-1.31-3.608C2.175 15.584 2.163 15.204 2.163 12s.012-3.584.07-4.85c.062-1.366.334-2.633 1.31-3.608.975-.975 2.242-1.247 3.608-1.31C8.416 2.175 8.796 2.163 12 2.163zm0-2.163C8.741 0 8.332.014 7.052.072 5.197.157 3.355.673 2.014 2.014.673 3.355.157 5.197.072 7.052.014 8.332 0 8.741 0 12c0 3.259.014 3.668.072 4.948.085 1.855.601 3.697 1.942 5.038 1.341 1.341 3.183 1.857 5.038 1.942C8.332 23.986 8.741 24 12 24s3.668-.014 4.948-.072c1.855-.085 3.697-.601 5.038-1.942 1.341-1.341 1.857-3.183 1.942-5.038.058-1.28.072-1.689.072-4.948s-.014-3.668-.072-4.948c-.085-1.855-.601-3.697-1.942-5.038C20.645.673 18.803.157 16.948.072 15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zm0 10.162a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
+            </svg>
+            Instagram
+          </a>
+
+          <button id="btn-copiar" class="btn-share btn-share--copiar">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 16H8V7h11v14z"/>
+            </svg>
+            <span id="texto-copiar">Copiar link</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- DETALHES DO PRODUTO -->
+      {% if produto.material or produto.medidas or produto.cuidados %}
+      <div class="detalhe-specs">
+        {% if produto.material %}
+        <p class="detalhe-spec"><strong>Material:</strong> {{ produto.material }}</p>
+        {% endif %}
+        {% if produto.medidas %}
+        <p class="detalhe-spec"><strong>Medidas:</strong> {{ produto.medidas }}</p>
+        {% endif %}
+        {% if produto.cuidados %}
+        <p class="detalhe-spec"><strong>Cuidados:</strong> {{ produto.cuidados }}</p>
+        {% endif %}
+      </div>
+      {% endif %}
+
+      {% endif %}{# fim do if not fora_estoque #}
+
+    </div>
+  </div>
+</section>
+
+<!-- AVALIAÇÕES -->
+<div class="avaliacoes-section">
+  <h2 class="avaliacoes-titulo">Avaliações</h2>
+
+  {% if media_estrelas %}
+  <div class="avaliacao-media">
+    <span class="avaliacao-media-numero">{{ media_estrelas|floatformat:1 }}</span>
+    <div>
+      <div class="avaliacao-media-estrelas">
+        {% for i in "12345" %}
+          {% if forloop.counter <= media_estrelas %}⭐{% else %}☆{% endif %}
+        {% endfor %}
+      </div>
+      <span class="avaliacao-media-count">{{ avaliacoes.count }} avaliação{{ avaliacoes.count|pluralize:",ões" }}</span>
+    </div>
+  </div>
+  {% endif %}
+
+  {% if comprou %}
+  <div class="avaliacao-form-box">
+    <h3 class="avaliacao-form-titulo">
+      {% if ja_avaliou %}Editar sua avaliação{% else %}Avaliar produto{% endif %}
+    </h3>
+    <form method="post" action="{% url 'loja:avaliar_produto' produto.id %}" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="form-group">
+        <label class="form-label">Sua nota *</label>
+        <div class="estrelas-container">
+          {% for i in "12345" %}
+          <label style="cursor:pointer;">
+            <input type="radio" name="estrelas" value="{{ forloop.counter }}"
+                   {% if minha_avaliacao.estrelas == forloop.counter %}checked{% endif %}
+                   style="display:none;">
+            <span class="estrela" data-valor="{{ forloop.counter }}">★</span>
+          </label>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Comentário</label>
+        <textarea name="comentario" rows="3" placeholder="Conte sua experiência com o produto..."
+                  class="form-textarea">{{ minha_avaliacao.comentario|default:'' }}</textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Foto do produto recebido (opcional)</label>
+        <label for="foto-avaliacao" class="upload-label">📎 Escolher foto</label>
+        <span id="nome-arquivo" class="upload-nome">Nenhum arquivo escolhido</span>
+        <input type="file" name="foto" id="foto-avaliacao" accept="image/*" style="display:none;"
+               onchange="document.getElementById('nome-arquivo').textContent = this.files[0]?.name || 'Nenhum arquivo escolhido'">
+      </div>
+      <button type="submit" class="btn-primary">
+        {% if ja_avaliou %}Atualizar Avaliação{% else %}Enviar Avaliação{% endif %}
+      </button>
+    </form>
+  </div>
+
+  {% elif request.user.is_authenticated %}
+  <p style="color:var(--texto-claro); font-size:0.9rem; margin-bottom:2rem;">Apenas clientes que compraram este produto podem avaliar.</p>
+
+  {% else %}
+  <p style="color:var(--texto-claro); font-size:0.9rem; margin-bottom:2rem;">
+    <a href="{% url 'loja:login' %}" class="form-link">Faça login</a> para avaliar este produto.
+  </p>
+  {% endif %}
+
+  {% for av in avaliacoes %}
+  <div class="avaliacao-item">
+    <div>
+      {% if produto.imagem_principal %}
+      <img src="{{ produto.imagem_principal.imagem.url }}" alt="{{ produto.nome }}" class="avaliacao-thumb">
+      {% else %}
+      <div class="avaliacao-thumb-placeholder">💎</div>
+      {% endif %}
+    </div>
+    <div class="avaliacao-conteudo">
+      <div class="avaliacao-header">
+        <strong class="avaliacao-autor">{{ av.usuario.first_name|default:av.usuario.username }}</strong>
+        <span class="avaliacao-data">{{ av.criado_em|date:"d/m/Y" }}</span>
+      </div>
+      <div class="avaliacao-estrelas">
+        {% for i in "12345" %}
+        <span class="estrela-aval {% if forloop.counter <= av.estrelas %}estrela-cheia{% else %}estrela-vazia{% endif %}">★</span>
+        {% endfor %}
+      </div>
+      {% if av.comentario %}
+      <p class="avaliacao-comentario">{{ av.comentario }}</p>
+      {% endif %}
+      {% if av.foto %}
+      <img src="{{ av.foto.url }}" alt="Foto do produto recebido" class="avaliacao-foto">
+      {% endif %}
+    </div>
+  </div>
+  {% empty %}
+  <p style="color:var(--texto-claro); font-size:0.9rem;">Nenhuma avaliação ainda. Seja o primeiro a avaliar!</p>
+  {% endfor %}
+</div>
+
+{% block extra_js %}
+<script src="{% static 'js/modules/produto.js' %}"></script>
+{% endblock %}
+
+{% endblock %}

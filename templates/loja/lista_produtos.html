@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Produtos — Ari Pratas{% endblock %}
+
+{% block content %}
+<section class="section">
+  <p class="section-label">Descubra</p>
+  <h2 class="section-titulo">Nossa Coleção</h2>
+  <div class="section-divisor">◆</div>
+
+  <!-- BUSCA -->
+  <form method="get" class="busca-container">
+    {% if categoria_atual %}<input type="hidden" name="categoria" value="{{ categoria_atual }}">{% endif %}
+    {% if ordem_atual %}<input type="hidden" name="ordem" value="{{ ordem_atual }}">{% endif %}
+    <input type="text" name="busca" value="{{ busca }}" placeholder="Buscar joias...">
+    <button type="submit">🔍</button>
+  </form>
+
+  <!-- FILTROS POR CATEGORIA -->
+  <div class="filtros">
+    <a href="{% url 'loja:lista_produtos' %}{% if ordem_atual %}?ordem={{ ordem_atual }}{% endif %}"
+       class="filtro-btn {% if not categoria_atual %}ativo{% endif %}">Todos</a>
+    {% for cat in categorias %}
+    <a href="?categoria={{ cat.slug }}{% if ordem_atual %}&ordem={{ ordem_atual }}{% endif %}{% if busca %}&busca={{ busca }}{% endif %}"
+       class="filtro-btn {% if categoria_atual == cat.slug %}ativo{% endif %}">
+      {{ cat.icone }} {{ cat.nome }}
+    </a>
+    {% endfor %}
+  </div>
+
+  <!-- ORDENAÇÃO -->
+  <div class="filtros" style="margin-top:-1.5rem;">
+    <span style="font-size:0.75rem; color:var(--texto-claro); text-transform:uppercase; letter-spacing:1px; align-self:center;">Ordenar:</span>
+    <a href="?{% if categoria_atual %}categoria={{ categoria_atual }}&{% endif %}{% if busca %}busca={{ busca }}&{% endif %}ordem=novidade"
+       class="filtro-btn {% if ordem_atual == 'novidade' or not ordem_atual %}ativo{% endif %}">✨ Novidades</a>
+    <a href="?{% if categoria_atual %}categoria={{ categoria_atual }}&{% endif %}{% if busca %}busca={{ busca }}&{% endif %}ordem=menor_preco"
+       class="filtro-btn {% if ordem_atual == 'menor_preco' %}ativo{% endif %}">↑ Menor preço</a>
+    <a href="?{% if categoria_atual %}categoria={{ categoria_atual }}&{% endif %}{% if busca %}busca={{ busca }}&{% endif %}ordem=maior_preco"
+       class="filtro-btn {% if ordem_atual == 'maior_preco' %}ativo{% endif %}">↓ Maior preço</a>
+    <a href="?{% if categoria_atual %}categoria={{ categoria_atual }}&{% endif %}{% if busca %}busca={{ busca }}&{% endif %}ordem=nome"
+       class="filtro-btn {% if ordem_atual == 'nome' %}ativo{% endif %}">A–Z Nome</a>
+  </div>
+
+  <!-- GRID -->
+  <div class="produtos-grid">
+    {% for produto in produtos %}
+    <div style="position:relative;" class="reveal">
+      <a href="{% url 'loja:detalhe_produto' produto.slug %}" class="produto-card{% if produto.fora_estoque %} produto-card-esgotado{% endif %}">
+        {% if produto.imagem_principal %}
+        <div class="produto-card-img">
+          <img src="{{ produto.imagem_principal.imagem.url }}" alt="{{ produto.nome }}" loading="lazy">
+          <div class="card-badges">
+            {% if produto.novo %}<span class="badge badge-novo">Novo</span>{% endif %}
+            {% if produto.desconto %}<span class="badge badge-desconto"style="font-size: 13px;">-{{ produto.desconto }}%</span>{% endif %}
+          </div>
+          {% if produto.fora_estoque %}<span class="card-fora-estoque">Fora de Estoque</span>{% endif %}
+        </div>
+        {% else %}
+        <div class="produto-card-sem-imagem">💎
+          <div class="card-badges">
+            {% if produto.novo %}<span class="badge badge-novo">Novo</span>{% endif %}
+            {% if produto.desconto %}<span class="badge badge-desconto"style="font-size: 13px;">-{{ produto.desconto }}%</span>{% endif %}
+          </div>
+          {% if produto.fora_estoque %}<span class="card-fora-estoque">Fora de Estoque</span>{% endif %}
+        </div>
+        {% endif %}
+        <div class="produto-card-info">
+          <h3>{{ produto.nome }}</h3>
+          <p>
+            {% if produto.promocao_ativa and produto.preco %}
+            <span class="preco-original">R$ {{ produto.preco_original }}</span>
+            <span class="preco">R$ {{ produto.preco_final }}</span>
+            {% elif produto.preco_final %}
+            <span class="preco">R$ {{ produto.preco_final }}</span>
+            {% else %}
+            <span class="preco">R$ 0,00</span>
+            {% endif %}
+          </p>
+        </div>
+      </a>
+      <a href="{% url 'loja:toggle_favorito' produto.id %}?next={{ request.path }}" class="btn-favorito">
+        {% if request.user.is_authenticated %}
+          {% if produto.id in favoritos_ids %}❤️{% else %}🤍{% endif %}
+        {% else %}🤍{% endif %}
+      </a>
+    </div>
+    {% empty %}
+    <p style="color:var(--texto-claro); grid-column:1/-1; text-align:center; padding:3rem;">
+      Nenhum produto encontrado.
+    </p>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

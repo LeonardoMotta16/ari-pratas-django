@@ -1,0 +1,193 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Checkout — Ari Pratas{% endblock %}
+
+{% block content %}
+<section class="section">
+
+  <div class="checkout-grid">
+
+    <!-- FORMULÁRIO -->
+    <div>
+      <h2 class="section-titulo" style="text-align: center;">Finalizar Compra</h2>
+      <form method="post" data-form-validar>
+        {% csrf_token %}
+        {% if erros %}
+<div class="checkout-erros" style="background:#fdecea; border:1px solid #f5c6cb; color:#a12a2a; padding:1rem 1.25rem; border-radius:8px; margin-bottom:1.5rem;">
+  <strong>Corrija os campos abaixo:</strong>
+  <ul style="margin:0.5rem 0 0; padding-left:1.25rem;">
+    {% for erro in erros %}
+    <li>{{ erro }}</li>
+    {% endfor %}
+  </ul>
+</div>  
+{% endif %}
+
+        <div class="form-row">
+          <div class="form-group">
+            <div class="form-field">
+              <label class="form-label">Nome *</label>
+              <input type="text" name="nome" required class="form-input" data-validar="obrigatorio">
+              <span class="form-field-icone form-field-icone--erro">✕</span>
+              <span class="form-field-icone form-field-icone--ok">✓</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-field">
+              <label class="form-label">Sobrenome *</label>
+              <input type="text" name="sobrenome" required class="form-input" data-validar="obrigatorio">
+              <span class="form-field-icone form-field-icone--erro">✕</span>
+              <span class="form-field-icone form-field-icone--ok">✓</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="form-field">
+            <label class="form-label">E-mail *</label>
+            <input type="email" name="email" required class="form-input" data-validar="obrigatorio email">
+            <span class="form-field-icone form-field-icone--erro">✕</span>
+            <span class="form-field-icone form-field-icone--ok">✓</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="form-field">
+            <label class="form-label">Telefone</label>
+            <input type="tel" name="Telefone" id="Telefone"
+                   placeholder="+55 11 12345-6789" maxlength="18"
+                   oninput="mascaraTelefone(this)"
+                   class="form-input" data-validar="telefone">
+            <span class="form-field-icone form-field-icone--erro">✕</span>
+            <span class="form-field-icone form-field-icone--ok">✓</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">CEP *</label>
+          <div class="cep-row">
+            <div class="form-field" style="flex:1;">
+              <input type="text" name="cep" id="cep" required
+                     maxlength="9" placeholder="00000-000"
+                     oninput="mascaraCep(this)" onblur="buscarCep()"
+                     class="form-input" data-validar="obrigatorio cep">
+              <span class="form-field-icone form-field-icone--erro">✕</span>
+              <span class="form-field-icone form-field-icone--ok">✓</span>
+            </div>
+            <button type="button" onclick="buscarCep()" class="btn-primary">Buscar</button>
+          </div>
+          <small id="cep-status" class="cep-status"></small>
+        </div>
+
+        <div class="form-group">
+          <div class="form-field">
+            <label class="form-label">Rua *</label>
+            <input type="text" name="rua" id="rua" required class="form-input" data-validar="obrigatorio">
+            <span class="form-field-icone form-field-icone--erro">✕</span>
+            <span class="form-field-icone form-field-icone--ok">✓</span>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <div class="form-field">
+              <label class="form-label">Número *</label>
+              <input type="text" name="numero" id="numero" required class="form-input" data-validar="obrigatorio">
+              <span class="form-field-icone form-field-icone--erro">✕</span>
+              <span class="form-field-icone form-field-icone--ok">✓</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-field">
+              <label class="form-label">Complemento</label>
+              <input type="text" name="complemento" id="complemento" class="form-input">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="form-field">
+            <label class="form-label">Bairro *</label>
+            <input type="text" name="bairro" id="bairro" required class="form-input" data-validar="obrigatorio">
+            <span class="form-field-icone form-field-icone--erro">✕</span>
+            <span class="form-field-icone form-field-icone--ok">✓</span>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <div class="form-field">
+              <label class="form-label">Cidade *</label>
+              <input type="text" name="cidade" id="cidade" required class="form-input" data-validar="obrigatorio">
+              <span class="form-field-icone form-field-icone--erro">✕</span>
+              <span class="form-field-icone form-field-icone--ok">✓</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-field">
+              <label class="form-label">Estado *</label>
+              <input type="text" name="estado" id="estado" required maxlength="2"
+                     class="form-input" data-validar="obrigatorio uf">
+              <span class="form-field-icone form-field-icone--erro">✕</span>
+              <span class="form-field-icone form-field-icone--ok">✓</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom:2rem;">
+          <label class="form-label">Forma de pagamento</label>
+          <select name="pagamento" class="form-select">
+            <option value="pix">PIX</option>
+            <option value="cartao">Cartão de Crédito</option>
+            <option value="boleto">Boleto</option>
+          </select>
+        </div>
+
+        <div class="form-checkbox-box">
+          <label class="form-checkbox-label">
+            <input type="checkbox" name="criar_conta" id="criar_conta">
+            Criar uma conta para acompanhar meus pedidos
+          </label>
+          <div id="campo-senha" style="display:none; margin-top:1rem;">
+            <div class="form-field">
+              <label class="form-label">Escolha uma senha</label>
+              <input type="password" name="senha" id="senha" class="form-input">
+            </div>
+          </div>
+        </div>
+
+        <!-- RESUMO -->
+        <div class="checkout-resumo">
+          {% for id, item in carrinho.items %}
+          <div class="checkout-item">
+            <span>{{ item.nome }} x{{ item.quantidade }}</span>
+            <span class="preco">R$ {{ item.preco }}</span>
+          </div>
+          {% endfor %}
+
+          {% if desconto %}
+          <div class="checkout-item" style="color:var(--verde-sucesso);">
+            <span>Desconto aplicado</span>
+            <span>− R$ {{ desconto|floatformat:2 }}</span>
+          </div>
+          {% endif %}
+
+          <div class="checkout-total">
+            <strong>Total</strong>
+            <span class="checkout-total-valor">R$ {{ total|floatformat:2 }}</span>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-primary btn-block" style="margin-top:1.5rem;">
+          Confirmar Pedido
+        </button>
+      </form>
+    </div>
+
+  </div>
+</section>
+
+
+<script src="{% static 'js/validacao.js' %}"></script>
+<script src="{% static 'js/modules/checkout.js' %}"></script>
+{% endblock %}

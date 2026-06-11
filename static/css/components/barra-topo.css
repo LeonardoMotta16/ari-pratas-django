@@ -1,0 +1,12 @@
+/* ==============================
+   BARRA TOPO
+   ============================== */
+.barra-topo {
+  background: var(--vinho);
+  color: white;
+  text-align: center;
+  padding: 0.6rem;
+  font-size: 0.78rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}

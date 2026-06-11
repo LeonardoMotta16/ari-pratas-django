@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}Meus Favoritos — Ari Pratas{% endblock %}
+
+{% block content %}
+<section class="section">
+  <p class="section-label">Sua Lista</p>
+  <h2 class="section-titulo">Meus Favoritos</h2>
+  <div class="section-divisor">◆</div>
+
+  {% if favoritos %}
+  <div class="produtos-grid">
+    {% for fav in favoritos %}
+    <div style="position:relative;">
+      <a href="{% url 'loja:detalhe_produto' fav.produto.slug %}" class="produto-card">
+        {% if fav.produto.imagem_principal %}
+        <div class="produto-card-img">
+          <img src="{{ fav.produto.imagem_principal.imagem.url }}" alt="{{ fav.produto.nome }}">
+        </div>
+        {% else %}
+        <div class="produto-card-sem-imagem">💎</div>
+        {% endif %}
+        <div class="produto-card-info">
+          <h3>{{ fav.produto.nome }}</h3>
+          <p><span class="preco">R$ {{ fav.produto.preco }}</span></p>
+        </div>
+      </a>
+      <a href="{% url 'loja:toggle_favorito' fav.produto.id %}?next=/favoritos/"
+         class="btn-favorito">❤️</a>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% else %}
+  <p style="text-align:center; color:var(--texto-claro); padding:3rem;">
+    Você ainda não tem produtos favoritos.<br><br>
+    <a href="{% url 'loja:lista_produtos' %}" class="btn-primary">Ver Produtos</a>
+  </p>
+  {% endif %}
+</section>
+{% endblock %}

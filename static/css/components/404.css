@@ -1,0 +1,61 @@
+/* ==============================
+   PÁGINA 404
+   ============================== */
+.pagina-404 {
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 4rem 5%;
+}
+.numero-404 {
+  font-family: var(--fonte-titulo);
+  font-size: 10rem;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--vinho);
+  line-height: 1;
+  opacity: 0.15;
+  position: absolute;
+  user-select: none;
+}
+.conteudo-404 { position: relative; z-index: 1; }
+.icone-404 {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+  animation: balanco 2.5s ease-in-out infinite;
+}
+@keyframes balanco {
+  0%, 100% { transform: rotate(-5deg); }
+  50%       { transform: rotate(5deg); }
+}
+.erro-404-label {
+  color: var(--vinho);
+  font-size: 0.75rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+.erro-404-titulo {
+  font-family: var(--fonte-titulo);
+  font-size: 3rem;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--texto);
+  margin-bottom: 1rem;
+}
+.erro-404-desc {
+  color: var(--texto-claro);
+  font-size: 0.9rem;
+  line-height: 1.8;
+  max-width: 400px;
+  margin: 0 auto 2.5rem;
+}
+.erro-404-btns {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}

@@ -1,0 +1,68 @@
+/* ==============================
+   HISTÓRICO DE PEDIDOS
+   ============================== */
+.historico-wrapper { max-width: 900px; margin: 4rem auto; padding: 0 1.5rem; }
+.historico-titulo {
+  font-family: var(--fonte-titulo);
+  font-weight: 300;
+  font-size: 2rem;
+  color: var(--vinho);
+  margin-bottom: 2rem;
+}
+
+.pedido-card {
+  border: 1px solid #e0d9d0;
+  border-radius: var(--raio);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  background: #fdfaf7;
+}
+.pedido-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e0d9d0;
+}
+.pedido-numero { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: #888; }
+.pedido-data   { margin: 0.2rem 0 0; color: #333; font-size: 0.9rem; }
+.pedido-status {
+  background: var(--vinho);
+  color: white;
+  padding: 0.3rem 1rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+}
+.pedido-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  font-size: 0.9rem;
+  color: #555;
+}
+.pedido-total {
+  text-align: right;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e0d9d0;
+  color: var(--vinho);
+  font-size: 1.1rem;
+}
+
+.historico-busca-box {
+  margin-top: 3rem;
+  padding: 2rem;
+  background: #f5f0ea;
+  border-radius: var(--raio);
+}
+.historico-busca-titulo { font-family: var(--fonte-titulo); font-weight: 300; margin-bottom: 1rem; }
+.historico-busca-row { display: flex; gap: 1rem; flex-wrap: wrap; }
+.historico-busca-row .form-input { flex: 1; min-width: 200px; }
+
+.historico-vazio { text-align: center; padding: 4rem 0; color: #888; }
+.historico-vazio-icone { font-size: 3rem; }
+.historico-vazio-msg { font-size: 1.1rem; margin: 1rem 0; }

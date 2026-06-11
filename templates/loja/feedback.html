@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Feedback — Ari Pratas{% endblock %}
+
+{% block content %}
+<section class="section" style="max-width:600px; margin:0 auto;">
+
+  <p class="section-label">Sua opinião importa</p>
+  <h1 class="section-titulo">Deixe seu Feedback</h1>
+  <div class="section-divisor">◆</div>
+
+  {% if enviado %}
+  <div class="form-sucesso">
+    <div class="form-sucesso-icone">✨</div>
+    <h2 class="form-sucesso-titulo">Obrigada pelo feedback!</h2>
+    <p style="color:var(--texto-claro);">Sua opinião nos ajuda a melhorar cada vez mais.</p>
+    <a href="{% url 'loja:home' %}" class="btn-primary" style="display:inline-block; margin-top:1.5rem;">Voltar à loja</a>
+  </div>
+
+  {% else %}
+
+  {% if erro %}
+  <div class="form-erro">{{ erro }}</div>
+  {% endif %}
+
+  <form method="post" style="margin-top:2rem;">
+    {% csrf_token %}
+
+    <div class="form-group">
+      <label class="form-label">Nome *</label>
+      <input type="text" name="nome" placeholder="Seu nome"
+             value="{{ request.POST.nome|default:'' }}" class="form-input">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">E-mail *</label>
+      <input type="email" name="email" placeholder="seu@email.com"
+             value="{{ request.POST.email|default:'' }}" class="form-input">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Sua nota *</label>
+      <div class="estrelas-container">
+        {% for i in "12345" %}
+        <label style="cursor:pointer;">
+          <input type="radio" name="estrelas" value="{{ forloop.counter }}" style="display:none;">
+          <span class="estrela" data-valor="{{ forloop.counter }}">★</span>
+        </label>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="form-group" style="margin-bottom:1.5rem;">
+      <label class="form-label">Mensagem *</label>
+      <textarea name="mensagem" rows="5" placeholder="Conte sua experiência com a nossa loja..."
+                class="form-textarea">{{ request.POST.mensagem|default:'' }}</textarea>
+    </div>
+
+    <button type="submit" class="btn-primary btn-block">Enviar Feedback</button>
+  </form>
+  {% endif %}
+
+</section>
+{% endblock %}

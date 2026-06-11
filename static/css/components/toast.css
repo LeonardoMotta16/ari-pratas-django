@@ -1,0 +1,123 @@
+/* ==============================
+   TOAST — Notificações globais
+   ============================== */
+
+.toast-container {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  pointer-events: none;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.9rem 1.2rem;
+  border-radius: 6px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  font-family: var(--fonte-corpo);
+  font-size: 0.88rem;
+  letter-spacing: 0.3px;
+  min-width: 260px;
+  max-width: 340px;
+  pointer-events: all;
+
+  /* Estado inicial: invisível e deslocado */
+  opacity: 0;
+  transform: translateX(20px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.toast--visivel {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.toast--saindo {
+  opacity: 0;
+  transform: translateX(20px);
+}
+
+/* Tipos */
+.toast--sucesso {
+  background: var(--branco);
+  border-left: 4px solid #2e7d32;
+  color: var(--texto);
+}
+
+.toast--erro {
+  background: var(--branco);
+  border-left: 4px solid #c62828;
+  color: var(--texto);
+}
+
+.toast--info {
+  background: var(--branco);
+  border-left: 4px solid var(--vinho);
+  color: var(--texto);
+}
+
+.toast-icone {
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.toast--sucesso .toast-icone { color: #2e7d32; }
+.toast--erro    .toast-icone { color: #c62828; }
+.toast--info    .toast-icone { color: var(--vinho); }
+
+.toast-msg {
+  flex: 1;
+  line-height: 1.4;
+}
+
+.toast-fechar {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #bbb;
+  font-size: 0.75rem;
+  padding: 0;
+  flex-shrink: 0;
+  transition: color 0.2s;
+}
+
+.toast-fechar:hover { color: var(--texto); }
+
+/* Estado de tamanho obrigatório */
+.tamanhos--erro .btn-tamanho {
+  animation: shake 0.4s ease;
+  border-color: #c62828 !important;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25%       { transform: translateX(-4px); }
+  75%       { transform: translateX(4px); }
+}
+
+/* Botão em loading */
+.btn--loading {
+  opacity: 0.75;
+  cursor: not-allowed;
+  position: relative;
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .toast-container {
+    bottom: 1rem;
+    right: 1rem;
+    left: 1rem;
+  }
+
+  .toast {
+    max-width: 100%;
+    min-width: unset;
+  }
+}

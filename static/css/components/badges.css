@@ -1,0 +1,24 @@
+/* ==============================
+   BADGES E PREÇOS
+   ============================== */
+.preco {
+  color: var(--vinho);
+  font-weight: 500;
+  font-size: 1rem;
+}
+.preco-original {
+  color: var(--texto-claro);
+  text-decoration: line-through;
+  font-size: 0.85rem;
+  margin-right: 0.4rem;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.badge-novo     { background: var(--vinho); color: white; }
+.badge-desconto { background: #c0392b; color: white; }

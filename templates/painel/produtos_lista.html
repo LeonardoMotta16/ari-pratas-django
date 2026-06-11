@@ -1,0 +1,69 @@
+{% extends 'painel/base.html' %}
+
+{% block title %}Produtos{% endblock %}
+
+{% block extra_css %}
+.badge { font-size: 0.7rem; padding: 0.25rem 0.7rem; border-radius: 20px; }
+.badge-sim { background: #e8f5e9; color: #2e7d32; }
+.badge-nao { background: #fce4ec; color: #c62828; }
+.btn-imagens { background: #eef2ff; color: #3451b2; font-size: 0.7rem; letter-spacing: 0.8px; text-transform: uppercase; text-decoration: none; padding: 0.6rem 1rem; border-radius: 4px; }
+
+@media (max-width: 768px) {
+  .acoes { flex-direction: row; flex-wrap: wrap; gap: 0.6rem; }
+  .acoes a, .acoes button { flex: 1; min-width: 80px; text-align: center; padding: 0.7rem 0.5rem; font-size: 0.72rem; }
+}
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h2>Produtos</h2>
+  <a href="{% url 'painel:produto_criar' %}" class="btn-novo">+ Novo Produto</a>
+</div>
+
+<div class="secao">
+  <table>
+    <thead>
+      <tr>
+        <th>#</th><th>Nome</th><th>Categoria</th><th>Preço</th><th>Disponível</th><th>Destaque</th><th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for produto in produtos %}
+      <tr>
+        <td data-label="#" style="color:#bbb; font-size:0.82rem;">{{ produto.id }}</td>
+        <td data-label="Nome" style="font-weight:500;">{{ produto.nome }}</td>
+        <td data-label="Categoria" style="color:#888;">{{ produto.categoria|default:"—" }}</td>
+        <td data-label="Preço">R$ {{ produto.preco_original|default:'' }}</td>
+<td data-label="Disponível">
+  {% if produto.fora_estoque %}
+  <span class="badge" style="background:#fff3cd; color:#856404;">Sem estoque</span>
+  {% elif produto.disponivel %}
+  <span class="badge badge-sim">Ativo</span>
+  {% else %}
+  <span class="badge badge-nao">Rascunho</span>
+  {% endif %}
+</td>
+<td data-label="Estoque">
+  <span class="badge {% if produto.fora_estoque %}badge-nao{% else %}badge-sim{% endif %}">
+    {% if produto.fora_estoque %}Não{% else %}Sim{% endif %}
+  </span>
+</td>
+<td data-label="Destaque"><span class="badge {% if produto.destaque %}badge-sim{% else %}badge-nao{% endif %}">{% if produto.destaque %}Sim{% else %}Não{% endif %}</span></td>
+<td data-label=" " class="acoes">
+          <a href="{% url 'painel:produto_editar' produto.id %}" class="btn-editar">✏️ Editar</a>
+          <a href="{% url 'painel:produto_imagens' produto.id %}" class="btn-imagens">🖼️ Imagens</a>
+          <form method="post" action="{% url 'painel:produto_deletar' produto.id %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn-deletar" onclick="return confirm('Deletar {{ produto.nome }}?')">🗑️ Deletar</button>
+          </form>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="7" style="text-align:center; color:#bbb; padding:3rem;">Nenhum produto cadastrado.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

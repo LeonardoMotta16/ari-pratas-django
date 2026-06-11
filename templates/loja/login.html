@@ -1,0 +1,36 @@
+<!-- ===================== login.html ===================== -->
+{% extends 'base.html' %}
+{% block title %}Login — Ari Pratas{% endblock %}
+{% block content %}
+
+<div class="pagina-form">
+  <div class="form-card">
+    <div class="form-header">
+      <p class="form-header-label">Bem-vinda de volta</p>
+      <h2 class="form-header-titulo">Entrar</h2>
+    </div>
+
+    {% if form.errors %}
+    <p class="form-erro" style="text-align:center;">Usuário ou senha incorretos.</p>
+    {% endif %}
+
+    <form method="post">
+      {% csrf_token %}
+      <div class="form-group">
+        <label class="form-label">Usuário</label>
+        <input type="text" name="username" autofocus class="form-input">
+      </div>
+      <div class="form-group" style="margin-bottom:2rem;">
+        <label class="form-label">Senha</label>
+        <input type="password" name="password" class="form-input">
+      </div>
+      <button type="submit" class="btn-primary btn-block">Entrar</button>
+    </form>
+
+    <p class="form-rodape">
+      Não tem conta? <a href="{% url 'loja:cadastro' %}" class="form-link">Cadastre-se</a>
+    </p>
+  </div>
+</div>
+
+{% endblock %}

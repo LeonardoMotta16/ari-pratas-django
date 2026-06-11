@@ -1,0 +1,85 @@
+/* ==============================
+   BUTTONS
+   ============================== */
+.btn-primary {
+  background: var(--vinho);
+  color: white;
+  padding: 1rem 2.5rem;
+  border: none;
+  font-family: var(--fonte-corpo);
+  font-size: 0.78rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background var(--transicao), transform 0.15s ease, box-shadow 0.15s ease;
+  display: inline-block;
+}
+.btn-primary:hover {
+  background: var(--vinho-escuro);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(150, 43, 104, 0.3);
+}
+.btn-primary:active { transform: translateY(0); box-shadow: none; }
+.btn-primary:focus-visible {
+  outline: 2px solid var(--vinho);
+  outline-offset: 2px;
+}
+.btn-primary:disabled,
+.btn-primary.btn--loading {
+  opacity: 0.75;
+  cursor: not-allowed;
+  pointer-events: none;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ── Spinner dentro do botão ── */
+.btn-primary.btn--loading {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+}
+
+.btn-primary.btn--loading::before {
+  content: '';
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: btn-spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes btn-spin {
+  to { transform: rotate(360deg); }
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--branco);
+  border: 1px solid #555;
+  padding: 1rem 2.5rem;
+  text-decoration: none;
+  font-size: 0.78rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  transition: all var(--transicao);
+  display: inline-block;
+}
+.btn-outline:hover { border-color: white; }
+
+.btn-outline-escuro {
+  color: var(--texto);
+  border-color: #ccc;
+}
+
+/* Modificadores */
+.btn-block {
+  width: 100%;
+  text-align: center;
+  border: none;
+  cursor: pointer;
+}

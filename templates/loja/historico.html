@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %}Meus Pedidos — Ari Pratas{% endblock %}
+
+{% block content %}
+<div class="historico-wrapper">
+
+  <h1 class="historico-titulo">Meus Pedidos</h1>
+
+  {% if pedidos %}
+    {% for pedido in pedidos %}
+    <div class="pedido-card">
+      <div class="pedido-card-header">
+        <div>
+          <p class="pedido-numero">Pedido #{{ pedido.id }}</p>
+          <p class="pedido-data">{{ pedido.criado_em|date:"d/m/Y \à\s H:i" }}</p>
+        </div>
+        <span class="pedido-status">{{ pedido.get_status_display|default:"Confirmado" }}</span>
+      </div>
+
+      {% for item in pedido.itens.all %}
+      <div class="pedido-item">
+        <span>{{ item.produto.nome }} × {{ item.quantidade }}</span>
+        <span>R$ {{ item.preco_total|floatformat:2 }}</span>
+      </div>
+      {% endfor %}
+
+      <div class="pedido-total">
+        <strong>Total: R$ {{ pedido.total|floatformat:2 }}</strong>
+      </div>
+    </div>
+    {% endfor %}
+
+  {% else %}
+  <div class="historico-vazio">
+    <p class="historico-vazio-icone">📦</p>
+    <p class="historico-vazio-msg">Você ainda não fez nenhum pedido.</p>
+    <a href="{% url 'loja:lista_produtos' %}" class="btn-primary">Ver Produtos</a>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

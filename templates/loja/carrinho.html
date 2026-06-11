@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block title %}Carrinho — Ari Pratas{% endblock %}
+
+{% block content %}
+<section class="section">
+  <h2 class="section-titulo">Meu Carrinho</h2>
+
+  {% if carrinho %}
+  <div class="carrinho-wrapper">
+
+    {% for id, item in carrinho.items %}
+    <div class="carrinho-item">
+      <div>
+        <h3 class="carrinho-item-nome">{{ item.nome }}</h3>
+        {% if item.tamanho %}
+        <p class="carrinho-item-tamanho">Tamanho: {{ item.tamanho }}</p>
+        {% endif %}
+        <div class="carrinho-item-qtd">
+          <a href="{% url 'loja:remover_um_carrinho' id %}" class="carrinho-qtd-btn carrinho-qtd-btn--menos">−</a>
+          <span>{{ item.quantidade }}</span>
+          <a href="{% url 'loja:adicionar_carrinho' item.produto_id %}" class="carrinho-qtd-btn carrinho-qtd-btn--mais">+</a>
+        </div>
+      </div>
+      <div class="carrinho-item-direita">
+        <span class="preco">R$ {{ item.preco }}</span>
+        <a href="{% url 'loja:remover_carrinho' id %}" class="carrinho-remover">Remover</a>
+      </div>
+    </div>
+    {% endfor %}
+
+    <!-- CUPOM -->
+    <form method="post" action="{% url 'loja:carrinho' %}">
+      {% csrf_token %}
+      <div class="carrinho-cupom">
+        <p class="carrinho-cupom-titulo">Cupom de Desconto</p>
+        <div class="cupom-row">
+          <input type="text" name="cupom" value="{{ cupom_aplicado }}"
+                 placeholder="Digite seu cupom" class="form-input">
+          <button type="submit" class="btn-primary">Aplicar</button>
+        </div>
+        {% if cupom_aplicado %}
+        <p class="cupom-msg cupom-msg--ok">✅ Cupom <strong>{{ cupom_aplicado }}</strong> aplicado!</p>
+        {% endif %}
+        {% if cupom_erro %}
+        <p class="cupom-msg cupom-msg--err">❌ {{ cupom_erro }}</p>
+        {% endif %}
+      </div>
+    </form>
+
+    <!-- RESUMO -->
+    <div class="carrinho-resumo">
+      <p class="carrinho-subtotal">Subtotal: <span>R$ {{ total|floatformat:2 }}</span></p>
+      {% if desconto %}
+      <p class="carrinho-desconto">Desconto: <span>− R$ {{ desconto|floatformat:2 }}</span></p>
+      {% endif %}
+      <p class="carrinho-total">Total: <span class="preco">R$ {{ total_final|floatformat:2 }}</span></p>
+      <a href="{% url 'loja:checkout' %}" class="btn-primary">Finalizar Compra</a>
+    </div>
+
+  </div>
+
+  {% else %}
+  <div class="carrinho-vazio">
+    <div class="carrinho-vazio-icone">🛒</div>
+    <p class="carrinho-vazio-msg">Seu carrinho está vazio.</p>
+    <a href="{% url 'loja:lista_produtos' %}" class="btn-primary">Ver Produtos</a>
+  </div>
+  {% endif %}
+
+</section>
+{% endblock %}

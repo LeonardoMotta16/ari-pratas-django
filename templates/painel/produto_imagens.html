@@ -1,0 +1,172 @@
+{% extends 'painel/base.html' %}
+
+{% block title %}Imagens — {{ produto.nome }}{% endblock %}
+
+{% block extra_css %}
+.btn-voltar { color:#999; text-decoration:none; font-size:0.78rem; letter-spacing:1px; text-transform:uppercase; }
+.instrucao { background:#fff8f0; border-left:3px solid #962b68; padding:1rem 1.5rem; margin-bottom:2rem; font-size:0.88rem; color:#555; border-radius:0 4px 4px 0; }
+.grade-imagens { display:flex; flex-wrap:wrap; gap:1.5rem; margin-bottom:2rem; }
+.item-imagem { background:white; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.08); padding:1rem; cursor:grab; transition:box-shadow 0.2s, transform 0.2s; width:160px; text-align:center; user-select:none; }
+.item-imagem:active { cursor:grabbing; }
+.item-imagem.arrastando { opacity:0.4; transform:scale(0.95); }
+.item-imagem.sobre { box-shadow:0 0 0 3px #962b68; }
+.item-imagem img { width:130px; height:130px; object-fit:cover; border-radius:6px; display:block; margin:0 auto 0.8rem; pointer-events:none; }
+.badge-principal { background:#962b68; color:white; font-size:0.65rem; letter-spacing:1px; text-transform:uppercase; padding:0.2rem 0.6rem; border-radius:20px; display:inline-block; margin-bottom:0.3rem; }
+.badge-ordem { background:#eee; color:#666; font-size:0.7rem; padding:0.2rem 0.6rem; border-radius:20px; display:inline-block; }
+.icone-arrastar { font-size:1.2rem; color:#ccc; margin-bottom:0.5rem; }
+.btn-salvar { background:#962b68; color:white; padding:0.9rem 2.5rem; border:none; font-family:'Georgia',serif; font-size:0.82rem; letter-spacing:2px; text-transform:uppercase; cursor:pointer; border-radius:4px; }
+.btn-salvar:hover { background:#7a1f52; }
+.feedback { display:none; color:green; font-size:0.85rem; margin-left:1rem; }
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h2>Imagens — {{ produto.nome }}</h2>
+  <a href="{% url 'painel:produtos_lista' %}" class="btn-voltar">← Voltar aos produtos</a>
+</div>
+
+<div class="instrucao">
+  🖱️ <strong>Arraste as imagens</strong> para mudar a ordem. A <strong>primeira imagem</strong> vira automaticamente a <strong>foto de capa</strong> do produto.
+</div>
+
+{% if imagens %}
+<div class="grade-imagens" id="grade">
+  {% for img in imagens %}
+  <div class="item-imagem" draggable="true" data-id="{{ img.id }}">
+    <div class="icone-arrastar">⠿</div>
+    <img src="{{ img.imagem.url }}" alt="Imagem {{ forloop.counter }}">
+    {% if forloop.first %}
+    <div class="badge-principal">⭐ Principal</div>
+    {% else %}
+    <div class="badge-ordem">{{ forloop.counter }}ª foto</div>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+
+<div style="display:flex; align-items:center;">
+  <button class="btn-salvar" onclick="salvarOrdem()">Salvar Ordem</button>
+  <span class="feedback" id="feedback">✅ Salvo com sucesso!</span>
+</div>
+
+{% else %}
+<p style="color:#999;">Nenhuma imagem cadastrada para este produto.</p>
+{% endif %}
+
+<script>
+  const grade = document.getElementById('grade');
+  let arrastando = null;
+  let touchClone = null;
+  let offsetX = 0, offsetY = 0;
+
+  // --- MOUSE (desktop) ---
+  grade.addEventListener('dragstart', e => {
+    arrastando = e.target.closest('.item-imagem');
+    setTimeout(() => arrastando.classList.add('arrastando'), 0);
+  });
+  grade.addEventListener('dragend', () => {
+    arrastando.classList.remove('arrastando');
+    grade.querySelectorAll('.item-imagem').forEach(el => el.classList.remove('sobre'));
+    atualizarBadges();
+    arrastando = null;
+  });
+  grade.addEventListener('dragover', e => {
+    e.preventDefault();
+    const alvo = e.target.closest('.item-imagem');
+    if (alvo && alvo !== arrastando) {
+      grade.querySelectorAll('.item-imagem').forEach(el => el.classList.remove('sobre'));
+      alvo.classList.add('sobre');
+      const itens = [...grade.querySelectorAll('.item-imagem')];
+      if (itens.indexOf(arrastando) < itens.indexOf(alvo)) {
+        grade.insertBefore(arrastando, alvo.nextSibling);
+      } else {
+        grade.insertBefore(arrastando, alvo);
+      }
+    }
+  });
+
+  // --- TOUCH (mobile) ---
+  grade.addEventListener('touchstart', e => {
+    arrastando = e.target.closest('.item-imagem');
+    if (!arrastando) return;
+    arrastando.classList.add('arrastando');
+
+    const rect = arrastando.getBoundingClientRect();
+    offsetX = e.touches[0].clientX - rect.left;
+    offsetY = e.touches[0].clientY - rect.top;
+
+    touchClone = arrastando.cloneNode(true);
+    touchClone.style.cssText = `
+      position:fixed; z-index:1000; opacity:0.85; pointer-events:none;
+      width:${rect.width}px; border-radius:8px;
+      box-shadow:0 8px 24px rgba(0,0,0,0.2);
+      left:${rect.left}px; top:${rect.top}px;
+    `;
+    document.body.appendChild(touchClone);
+  }, { passive: true });
+
+  grade.addEventListener('touchmove', e => {
+    e.preventDefault();
+    if (!arrastando || !touchClone) return;
+    const tx = e.touches[0].clientX - offsetX;
+    const ty = e.touches[0].clientY - offsetY;
+    touchClone.style.left = tx + 'px';
+    touchClone.style.top = ty + 'px';
+
+    const cx = e.touches[0].clientX;
+    const cy = e.touches[0].clientY;
+    grade.querySelectorAll('.item-imagem').forEach(el => el.classList.remove('sobre'));
+    const alvo = [...grade.querySelectorAll('.item-imagem')].find(el => {
+      if (el === arrastando) return false;
+      const r = el.getBoundingClientRect();
+      return cx >= r.left && cx <= r.right && cy >= r.top && cy <= r.bottom;
+    });
+    if (alvo) {
+      alvo.classList.add('sobre');
+      const itens = [...grade.querySelectorAll('.item-imagem')];
+      if (itens.indexOf(arrastando) < itens.indexOf(alvo)) {
+        grade.insertBefore(arrastando, alvo.nextSibling);
+      } else {
+        grade.insertBefore(arrastando, alvo);
+      }
+    }
+  }, { passive: false });
+
+  grade.addEventListener('touchend', () => {
+    if (!arrastando) return;
+    arrastando.classList.remove('arrastando');
+    grade.querySelectorAll('.item-imagem').forEach(el => el.classList.remove('sobre'));
+    if (touchClone) { touchClone.remove(); touchClone = null; }
+    atualizarBadges();
+    arrastando = null;
+  });
+
+  function atualizarBadges() {
+    grade.querySelectorAll('.item-imagem').forEach((item, i) => {
+      const badge = item.querySelector('.badge-principal, .badge-ordem');
+      if (i === 0) {
+        badge.className = 'badge-principal';
+        badge.textContent = '⭐ Principal';
+      } else {
+        badge.className = 'badge-ordem';
+        badge.textContent = `${i + 1}ª foto`;
+      }
+    });
+  }
+
+  function salvarOrdem() {
+    const ids = [...grade.querySelectorAll('.item-imagem')].map(el => el.dataset.id);
+    fetch("{% url 'painel:salvar_ordem_imagens' produto.id %}", {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-CSRFToken': '{{ csrf_token }}' },
+      body: JSON.stringify({ ordem: ids }),
+    }).then(r => r.json()).then(data => {
+      if (data.ok) {
+        const feedback = document.getElementById('feedback');
+        feedback.style.display = 'inline';
+        setTimeout(() => feedback.style.display = 'none', 3000);
+      }
+    });
+  }
+</script>
+{% endblock %}

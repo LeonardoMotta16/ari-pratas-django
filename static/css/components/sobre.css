@@ -1,0 +1,25 @@
+/* ==============================
+   SOBRE
+   ============================== */
+.sobre-hero { min-height: 400px; }
+
+.sobre-valores-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+.sobre-valor-card {
+  padding: 2rem;
+  background: var(--creme);
+  border-radius: var(--raio);
+  text-align: center;
+}
+.sobre-valor-icone { font-size: 3rem; margin-bottom: 1rem; }
+.sobre-valor-titulo {
+  font-family: var(--fonte-titulo);
+  font-size: 1.4rem;
+  color: var(--vinho);
+  margin-bottom: 0.5rem;
+}
+.sobre-valor-desc { color: var(--texto-claro); font-size: 0.9rem; }

@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Ari Pratas — Joias Artesanais{% endblock %}
+
+{% block content %}
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-linha">
+    <span class="hero-subtitulo">Coleção Exclusiva 2025</span>
+  </div>
+  <h1>Prata 925<br>Legítima</h1>
+  <p class="hero-desc">Joias Artesanais · Certificado de Artesanato</p>
+  <div class="hero-btns">
+    <a href="{% url 'loja:lista_produtos' %}" class="btn-primary">Ver Coleção</a>
+    <a href="{% url 'loja:sobre' %}" class="btn-outline">Nossa História</a>
+  </div>
+</section>
+
+<!-- CATEGORIAS -->
+<div class="categorias-barra">
+  {% for cat in categorias %}
+  <a href="{% url 'loja:lista_produtos' %}?categoria={{ cat.slug }}" class="categoria-item">
+    <span class="icone">{{ cat.icone|default:"💎" }}</span>
+    {{ cat.nome }}
+  </a>
+  {% empty %}
+  <a href="#" class="categoria-item"><span class="icone">💍</span>Anéis</a>
+  <a href="#" class="categoria-item"><span class="icone">📿</span>Colares</a>
+  <a href="#" class="categoria-item"><span class="icone">💎</span>Brincos</a>
+  <a href="#" class="categoria-item"><span class="icone">✨</span>Pulseiras</a>
+  {% endfor %}
+</div>
+
+<!-- DESTAQUES -->
+<section class="section">
+  <p class="section-label">Catálogo</p>
+  <h2 class="section-titulo">Nossas Peças</h2>
+  <div class="section-divisor">◆</div>
+
+  <div class="produtos-grid">
+    {% for produto in destaques %}
+    <a href="{% url 'loja:detalhe_produto' produto.slug %}" class="produto-card reveal{% if produto.fora_estoque %} produto-card-esgotado{% endif %}">
+      {% if produto.imagem_principal %}
+      <div class="produto-card-img">
+        <img src="{{ produto.imagem_principal.imagem.url }}" alt="{{ produto.nome }}">
+        <div class="card-badges">
+          {% if produto.novo %}<span class="badge badge-novo">Novo</span>{% endif %}
+          {% if produto.desconto %}<span class="badge badge-desconto"style="font-size: 13px;">-{{ produto.desconto }}%</span>{% endif %}
+        </div>
+        {% if produto.fora_estoque %}<span class="card-fora-estoque">Fora de Estoque</span>{% endif %}
+      </div>
+      {% else %}
+      <div class="produto-card-sem-imagem">💎
+        <div class="card-badges">
+          {% if produto.novo %}<span class="badge badge-novo">Novo</span>{% endif %}
+          {% if produto.desconto %}<span class="badge badge-desconto"style="font-size: 13px;">-{{ produto.desconto }}%</span>{% endif %}
+        </div>
+        {% if produto.fora_estoque %}<span class="card-fora-estoque">Fora de Estoque</span>{% endif %}
+      </div>
+      {% endif %}
+      <div class="produto-card-info">
+        <h3>{{ produto.nome }}</h3>
+        <p>
+          {% if produto.promocao_ativa and produto.preco %}
+          <span class="preco-original">R$ {{ produto.preco_original }}</span>
+          <span class="preco">R$ {{ produto.preco_final }}</span>
+          {% elif produto.preco_final %}
+          <span class="preco">R$ {{ produto.preco_final }}</span>
+          {% else %}
+          <span class="preco">R$ 0,00</span>
+          {% endif %}
+        </p>
+      </div>
+    </a>
+    {% empty %}
+    <p style="color:var(--texto-claro); grid-column:1/-1; text-align:center; padding:3rem;">
+      Nenhum produto em destaque ainda.
+    </p>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- BANNER OFERTA -->
+<section class="banner-oferta">
+  <div>
+    <!-- descomente quando quiser ativar:
+    <p class="banner-oferta-label">Oferta Especial</p>
+    <h2 class="banner-oferta-titulo">Frete grátis acima<br>de R$ 199</h2>
+    <p class="banner-oferta-desc">Para todo o Brasil · Entrega segura e rastreada</p>
+    -->
+  </div>
+  <a href="{% url 'loja:lista_produtos' %}" class="btn-primary">Aproveite a Oferta</a>
+</section>
+
+<!-- DIFERENCIAIS -->
+<div class="diferenciais-grid">
+  <div class="diferencial-item">
+    <div class="diferencial-icone">🏅</div>
+    <p class="diferencial-titulo">Certeza</p>
+    <p class="diferencial-desc">Prata 925 legítima</p>
+  </div>
+  <div class="diferencial-item">
+    <div class="diferencial-icone">🚚</div>
+    <p class="diferencial-titulo">Entrega</p>
+    <p class="diferencial-desc">Todo o Brasil</p>
+  </div>
+  <div class="diferencial-item">
+    <div class="diferencial-icone">🔄</div>
+    <p class="diferencial-titulo">Troca</p>
+    <p class="diferencial-desc">30 dias garantidos</p>
+  </div>
+  <div class="diferencial-item">
+    <div class="diferencial-icone">🔒</div>
+    <p class="diferencial-titulo">Seguro</p>
+    <p class="diferencial-desc">Pagamento protegido</p>
+  </div>
+</div>
+
+{% endblock %}

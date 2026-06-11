@@ -1,0 +1,43 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Página não encontrada — Ari Pratas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+  <div class="barra-topo">🚚 Entregamos para todo o Brasil!</div>
+
+  <header class="navbar">
+    <a href="/" class="navbar-logo">Ari <span>Pratas</span></a>
+  </header>
+
+  <div class="pagina-404">
+    <span class="numero-404">404</span>
+    <div class="conteudo-404">
+      <div class="icone-404">💎</div>
+      <p class="erro-404-label">Ops!</p>
+      <h1 class="erro-404-titulo">Página não encontrada</h1>
+      <p class="erro-404-desc">
+        A joia que você procura não está aqui. Que tal explorar nossa coleção completa?
+      </p>
+      <div class="erro-404-btns">
+        <a href="/" class="btn-primary">Ir para a Home</a>
+        <a href="/produtos/" class="btn-outline btn-outline-escuro">Ver Coleção</a>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-barra-inferior">
+      <p class="footer-copy">© 2025 Ari Pratas</p>
+    </div>
+  </footer>
+
+</body>
+</html>

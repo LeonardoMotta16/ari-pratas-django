@@ -1,0 +1,34 @@
+/* ==============================
+   TOKENS.CSS — Fonte da Verdade
+   Cores, tipografia, espaçamentos,
+   sombras, bordas e transições.
+   Não coloque regras aqui, só variáveis.
+   ============================== */
+
+:root {
+  /* Cores */
+  --creme: #f5f0e8;
+  --creme-escuro: #ede5d4;
+  --vinho: #962b68;
+  --vinho-escuro: #7a2256;
+  --preto: #0a0a0a;
+  --texto: #2c2c2c;
+  --texto-claro: #6b6b6b;
+  --branco: #ffffff;
+  --verde-sucesso: #1a7f4b;
+  --vermelho-erro: #c0392b;
+
+  /* Tipografia */
+  --fonte-titulo: 'Cormorant Garamond', serif;
+  --fonte-corpo: 'Montserrat', sans-serif;
+
+  /* Sombras */
+  --sombra: 0 4px 20px rgba(0, 0, 0, 0.08);
+  --sombra-media: 0 8px 32px rgba(0, 0, 0, 0.12);
+
+  /* Bordas */
+  --raio: 8px;
+
+  /* Transições */
+  --transicao: 0.3s ease;
+}

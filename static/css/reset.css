@@ -1,0 +1,25 @@
+/* loja/static/loja/css/reset.css */
+
+/* Aplica border-box em absolutamente tudo */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+    text-rendering: optimizeSpeed;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Garante que imagens e inputs não quebrem o layout */
+img, picture {
+    max-width: 100%;
+    display: block;
+}
+
+input, button, textarea, select {
+    font: inherit;
+}

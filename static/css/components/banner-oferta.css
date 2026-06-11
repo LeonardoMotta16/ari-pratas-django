@@ -1,0 +1,33 @@
+/* ==============================
+   BANNER OFERTA
+   ============================== */
+.banner-oferta {
+  background: #111;
+  padding: 4rem 5%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+.banner-oferta-label {
+  color: var(--vinho);
+  font-size: 0.7rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+.banner-oferta-titulo {
+  font-family: var(--fonte-titulo);
+  font-size: 3rem;
+  color: white;
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.1;
+}
+.banner-oferta-desc {
+  color: #888;
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
+  letter-spacing: 1px;
+}

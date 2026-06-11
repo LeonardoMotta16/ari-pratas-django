@@ -1,0 +1,231 @@
+/* ==============================
+   FORMS — Sistema global
+   ============================== */
+
+/* Página centralizada (login, cadastro, contato) */
+.pagina-form {
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 5%;
+}
+
+.form-card {
+  background: white;
+  padding: 3rem;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: var(--sombra);
+  border-radius: var(--raio);
+}
+.form-card--largo { max-width: 600px; }
+
+/* Cabeçalho */
+.form-header { text-align: center; margin-bottom: 2rem; }
+.form-header-label {
+  color: var(--vinho);
+  font-size: 0.7rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+.form-header-titulo {
+  font-family: var(--fonte-titulo);
+  font-size: 2.5rem;
+  font-weight: 300;
+  font-style: italic;
+}
+
+/* Grupos e grid */
+.form-group { margin-bottom: 1.2rem; }
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.2rem;
+}
+@media (max-width: 480px) {
+  .form-row { grid-template-columns: 1fr; }
+}
+
+/* Labels */
+.form-label {
+  display: block;
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+  color: var(--texto);
+  font-weight: 500;
+}
+
+/* Inputs, selects, textareas */
+.form-input,
+.form-select,
+.form-textarea {
+  width: 100%;
+  padding: 0.9rem 1rem;
+  border: 1.5px solid #ddd;
+  border-radius: var(--raio);
+  font-family: var(--fonte-corpo);
+  font-size: 1rem; /* nunca abaixo de 16px — evita zoom iOS */
+  color: var(--texto);
+  background: white;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  min-height: 48px;
+  outline: none;
+}
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  border-color: var(--vinho);
+  box-shadow: 0 0 0 3px rgba(150, 43, 104, 0.1);
+}
+.form-textarea { resize: vertical; min-height: 120px; }
+
+/* CEP */
+.cep-row { display: flex; gap: 0.5rem; }
+.cep-row .form-input { flex: 1; }
+.cep-status { font-size: 0.78rem; color: #999; margin-top: 0.3rem; display: block; }
+
+/* --- Estados de feedback --- */
+
+/* Erro */
+.form-input--erro,
+.form-select--erro,
+.form-textarea--erro {
+  border-color: var(--vermelho-erro) !important;
+  background: #fff8f8;
+  box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.08);
+}
+.form-input--erro:focus,
+.form-select--erro:focus,
+.form-textarea--erro:focus {
+  box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.15);
+}
+
+/* Sucesso */
+.form-input--ok,
+.form-select--ok,
+.form-textarea--ok {
+  border-color: var(--verde-sucesso) !important;
+  background: #f8fff9;
+  box-shadow: 0 0 0 3px rgba(26, 127, 75, 0.08);
+}
+
+/* Wrapper com ícone */
+.form-field { position: relative; }
+.form-field .form-input,
+.form-field .form-select,
+.form-field .form-textarea {
+  padding-right: 2.8rem;
+}
+
+.form-field-icone {
+  position: absolute;
+  right: 0.9rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: block;   /* transform só funciona em block/inline-block, não em span inline */
+  line-height: 1;
+  font-size: 1rem;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.form-field-icone--erro { color: var(--vermelho-erro); }
+.form-field-icone--ok   { color: var(--verde-sucesso); }
+.form-field.tem-erro .form-field-icone--erro { opacity: 1; }
+.form-field.tem-ok   .form-field-icone--ok   { opacity: 1; }
+
+/* Mensagem inline */
+.form-campo-msg {
+  font-size: 0.75rem;
+  margin-top: 0.3rem;
+  display: none;
+  animation: fadeUp 0.2s ease both;
+}
+.form-campo-msg--erro { color: var(--vermelho-erro); display: block; }
+.form-campo-msg--ok   { color: var(--verde-sucesso); display: block; }
+
+/* Label colorida por estado — label fica fora do .form-field, como irmão anterior */
+.form-field.tem-erro .form-label { color: var(--vermelho-erro); }
+.form-field.tem-ok   .form-label { color: var(--verde-sucesso); }
+/* Quando label é irmão anterior ao .form-field dentro do .form-group */
+.form-group:has(.form-field.tem-erro) > .form-label { color: var(--vermelho-erro); }
+.form-group:has(.form-field.tem-ok)   > .form-label { color: var(--verde-sucesso); }
+
+/* Checkbox */
+.form-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+.form-checkbox-box {
+  margin-bottom: 1.5rem;
+  padding: 1.2rem;
+  background: var(--creme);
+  border-radius: var(--raio);
+}
+
+/* Mensagens de alerta */
+.form-erro {
+  background: #fff3f3;
+  border: 1px solid #f5c6cb;
+  border-radius: var(--raio);
+  padding: 0.8rem 1.2rem;
+  color: var(--vermelho-erro);
+  font-size: 0.88rem;
+  margin-bottom: 1.2rem;
+}
+.form-erro-lista {
+  color: var(--vermelho-erro);
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+  padding-left: 1.2rem;
+}
+.form-sucesso {
+  background: #f0faf4;
+  border: 1px solid #b7e4c7;
+  border-radius: var(--raio);
+  padding: 2rem;
+  text-align: center;
+  margin-top: 2rem;
+}
+.form-sucesso-icone { font-size: 2.5rem; margin-bottom: 1rem; }
+.form-sucesso-titulo {
+  font-family: var(--fonte-titulo);
+  color: var(--vinho);
+  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Links e rodapé */
+.form-link { color: var(--vinho); text-decoration: none; }
+.form-rodape {
+  text-align: center;
+  margin-top: 1.5rem;
+  font-size: 0.85rem;
+  color: var(--texto-claro);
+}
+
+/* Estrelas (avaliação no form) */
+.estrelas-container { display: flex; gap: 0.5rem; font-size: 2rem; }
+.estrela { color: #ddd; transition: color 0.2s; cursor: pointer; }
+
+/* Upload de foto */
+.upload-label {
+  display: inline-block;
+  padding: 0.6rem 1.2rem;
+  background: var(--vinho);
+  color: white;
+  border-radius: var(--raio);
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-family: var(--fonte-corpo);
+}
+.upload-nome { margin-left: 0.8rem; font-size: 0.82rem; color: #888; }

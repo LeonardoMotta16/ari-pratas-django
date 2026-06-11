@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}Pedido Confirmado — Ari Pratas{% endblock %}
+
+{% block content %}
+<section class="section confirmado-section">
+  <div class="confirmado-icone">✅</div>
+  <h2 class="confirmado-titulo">Pedido Confirmado!</h2>
+  <p class="confirmado-desc">
+    Obrigada pela sua compra! Em breve entraremos em contato pelo WhatsApp ou e-mail para confirmar os detalhes do seu pedido.
+  </p>
+  <a href="{% url 'loja:lista_produtos' %}" class="btn-primary">Continuar Comprando</a>
+</section>
+{% endblock %}

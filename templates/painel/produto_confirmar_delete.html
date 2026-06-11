@@ -1,0 +1,28 @@
+{% extends 'painel/base.html' %}
+
+{% block title %}Deletar Produto{% endblock %}
+
+{% block extra_css %}
+.conteudo { display: flex; align-items: center; justify-content: center; }
+.caixa { background: white; padding: 3rem; box-shadow: 0 2px 10px rgba(0,0,0,0.06); max-width: 480px; width: 100%; text-align: center; }
+.caixa h2 { font-size: 1.6rem; font-weight: 300; font-style: italic; margin-bottom: 1rem; }
+.caixa p { font-size: 0.88rem; color: #666; margin-bottom: 2rem; line-height: 1.6; }
+.acoes { display: flex; gap: 1rem; justify-content: center; }
+.btn-cancelar { padding: 0.8rem 2rem; background: #f5f0eb; color: #444; text-decoration: none; font-size: 0.78rem; letter-spacing: 1px; text-transform: uppercase; }
+.btn-confirmar { padding: 0.8rem 2rem; background: #c62828; color: white; border: none; font-family: 'Georgia', serif; font-size: 0.78rem; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; }
+.btn-confirmar:hover { background: #b71c1c; }
+{% endblock %}
+
+{% block content %}
+<div class="caixa">
+  <h2>Confirmar exclusão</h2>
+  <p>Tem certeza que deseja deletar o produto <strong>{{ produto.nome }}</strong>? Esta ação não pode ser desfeita.</p>
+  <div class="acoes">
+    <a href="{% url 'painel:produtos_lista' %}" class="btn-cancelar">Cancelar</a>
+    <form method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn-confirmar">Sim, deletar</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

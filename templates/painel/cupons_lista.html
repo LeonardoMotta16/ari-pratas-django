@@ -1,0 +1,103 @@
+{% extends 'painel/base.html' %}
+
+{% block title %}Cupons{% endblock %}
+
+{% block extra_css %}
+.abas { display:flex; gap:0.5rem; margin-bottom:1.5rem; }
+.aba { padding:0.6rem 1.2rem; border:none; border-radius:4px; cursor:pointer; font-family:'Georgia',serif; font-size:0.78rem; letter-spacing:1px; text-transform:uppercase; background:#eee; color:#666; }
+.aba.ativa { background:#962b68; color:white; }
+.painel-aba { display:none; }
+.painel-aba.ativo { display:block; }
+.btn-verde { background:#2ecc71; color:white; font-size:0.75rem; letter-spacing:1px; text-transform:uppercase; text-decoration:none; padding:0.3rem 0.8rem; border-radius:4px; border:none; cursor:pointer; }
+.btn-vermelho { background:#e74c3c; color:white; font-size:0.75rem; letter-spacing:1px; text-transform:uppercase; text-decoration:none; padding:0.3rem 0.8rem; border-radius:4px; border:none; cursor:pointer; font-family:'Georgia',serif; }
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h2>Cupons de Desconto</h2>
+  <a href="{% url 'painel:cupom_criar' %}" class="btn-novo">+ Novo Cupom</a>
+</div>
+
+<div class="abas">
+  <button class="aba ativa" onclick="trocarAba('ativos', this)">Ativos</button>
+  <button class="aba" onclick="trocarAba('inativos', this)">Desativados</button>
+</div>
+
+<!-- ATIVOS -->
+<div class="painel-aba ativo" id="aba-ativos">
+  <div class="secao">
+    <table>
+      <thead>
+        <tr>
+          <th>Código</th><th>Desconto</th><th>Tipo</th><th>Criado em</th><th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for cupom in cupons %}
+        {% if cupom.ativo %}
+        <tr>
+          <td data-label="Código"><strong>{{ cupom.codigo }}</strong></td>
+          <td data-label="Desconto">{{ cupom.desconto }}%</td>
+          <td data-label="Tipo">{% if cupom.fidelidade %}<span class="badge" style="background:#e8f0fe; color:#3451b2;">Fidelidade</span>{% else %}<span class="badge" style="background:#f5f0eb; color:#666;">Manual</span>{% endif %}</td>
+          <td data-label="Criado em">{{ cupom.criado_em|date:"d/m/Y" }}</td>
+          <td data-label=" " class="acoes">
+            <a href="{% url 'painel:cupom_editar' cupom.id %}" class="btn-editar">Editar</a>
+            <a href="{% url 'painel:cupom_toggle' cupom.id %}" class="btn-vermelho">Desativar</a>
+            <form method="post" action="{% url 'painel:cupom_deletar' cupom.id %}" style="display:inline;">
+              {% csrf_token %}
+              <button type="submit" class="btn-vermelho" onclick="return confirm('Deletar cupom?')">Deletar</button>
+            </form>
+          </td>
+        </tr>
+        {% endif %}
+        {% empty %}
+        <tr><td colspan="5" style="text-align:center; color:#999;">Nenhum cupom ativo.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- DESATIVADOS -->
+<div class="painel-aba" id="aba-inativos">
+  <div class="secao">
+    <table>
+      <thead>
+        <tr>
+          <th>Código</th><th>Desconto</th><th>Tipo</th><th>Criado em</th><th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for cupom in cupons %}
+        {% if not cupom.ativo %}
+        <tr>
+          <td data-label="Código"><strong>{{ cupom.codigo }}</strong></td>
+          <td data-label="Desconto">{{ cupom.desconto }}%</td>
+          <td data-label="Tipo">{% if cupom.fidelidade %}<span class="badge" style="background:#e8f0fe; color:#3451b2;">Fidelidade</span>{% else %}<span class="badge" style="background:#f5f0eb; color:#666;">Manual</span>{% endif %}</td>
+          <td data-label="Criado em">{{ cupom.criado_em|date:"d/m/Y" }}</td>
+          <td data-label=" " class="acoes">
+            <a href="{% url 'painel:cupom_toggle' cupom.id %}" class="btn-verde">Reativar</a>
+            <form method="post" action="{% url 'painel:cupom_deletar' cupom.id %}" style="display:inline;">
+              {% csrf_token %}
+              <button type="submit" class="btn-vermelho" onclick="return confirm('Deletar cupom?')">Deletar</button>
+            </form>
+          </td>
+        </tr>
+        {% endif %}
+        {% empty %}
+        <tr><td colspan="5" style="text-align:center; color:#999;">Nenhum cupom desativado.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+function trocarAba(nome, btn) {
+  document.querySelectorAll('.painel-aba').forEach(el => el.classList.remove('ativo'));
+  document.querySelectorAll('.aba').forEach(el => el.classList.remove('ativa'));
+  document.getElementById('aba-' + nome).classList.add('ativo');
+  btn.classList.add('ativa');
+}
+</script>
+{% endblock %}

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Painel{% endblock %} — Ari Pratas</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Georgia', serif; background: #f5f0eb; color: #2c2c2c; display: flex; min-height: 100vh; }
+
+    /* SIDEBAR */
+    .sidebar { width: 240px; background: #1a1a1a; color: #ccc; display: flex; flex-direction: column; padding: 2rem 0; position: fixed; height: 100vh; z-index: 200; transition: transform 0.3s ease; }
+    .sidebar-logo { text-align: center; padding: 0 1.5rem 2rem; border-bottom: 1px solid #333; }
+    .sidebar-logo h1 { font-size: 1.3rem; font-weight: 300; font-style: italic; color: #962b68; letter-spacing: 2px; }
+    .sidebar-logo p { font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; color: #666; margin-top: 0.3rem; }
+    .sidebar nav { margin-top: 1.5rem; flex: 1; }
+    .sidebar nav a { display: block; padding: 0.85rem 1.5rem; color: #aaa; text-decoration: none; font-size: 0.82rem; letter-spacing: 1px; text-transform: uppercase; transition: all 0.2s; border-left: 3px solid transparent; }
+    .sidebar nav a:hover, .sidebar nav a.ativo { color: #962b68; background: #222; border-left-color: #962b68; }
+    .sidebar-footer { padding: 1.5rem; border-top: 1px solid #333; text-align: center; }
+
+    /* OVERLAY */
+    .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 150; }
+    .overlay.ativo { display: block; }
+
+    /* TOPBAR MOBILE */
+    .topbar { display: none; position: fixed; top: 0; left: 0; right: 0; height: 56px; background: #1a1a1a; z-index: 100; align-items: center; padding: 0 1.2rem; gap: 1rem; }
+    .topbar-logo { font-family: 'Georgia', serif; font-size: 1.1rem; font-style: italic; color: #962b68; letter-spacing: 2px; flex: 1; }
+    .btn-menu { background: none; border: none; color: #ccc; font-size: 1.5rem; cursor: pointer; padding: 0.5rem; }
+
+    /* CONTEÚDO */
+    .conteudo { margin-left: 240px; flex: 1; padding: 2.5rem; }
+
+    /* COMPONENTES */
+    .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
+    .page-header h2 { font-size: 1.8rem; font-weight: 300; font-style: italic; }
+    .btn-novo { background: #962b68; color: white; padding: 0.7rem 1.5rem; text-decoration: none; font-size: 0.78rem; letter-spacing: 1px; text-transform: uppercase; border-radius: 4px; white-space: nowrap; }
+    .btn-novo:hover { background: #7a1f52; }
+    .secao { background: white; padding: 1.8rem; box-shadow: 0 2px 10px rgba(0,0,0,0.06); border-radius: 4px; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    th { text-align: left; font-size: 0.7rem; letter-spacing: 1px; text-transform: uppercase; color: #999; padding: 0.6rem 1rem; border-bottom: 1px solid #f0f0f0; }
+    td { padding: 0.9rem 1rem; border-bottom: 1px solid #f9f9f9; color: #444; }
+    tr:last-child td { border-bottom: none; }
+    .acoes { display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; }
+    .acoes a, .acoes button { font-size: 0.7rem; letter-spacing: 0.8px; text-transform: uppercase; text-decoration: none; padding: 0.4rem 0.9rem; border: none; cursor: pointer; border-radius: 4px; font-family: 'Georgia', serif; transition: all 0.2s; }
+    .btn-editar { background: #f0ece4; color: #4a3728; }
+    .btn-deletar { background: #fef0f0; color: #c62828; }
+    .btn-ver { background: #f5f0eb; color: #1a1a1a; font-size: 0.75rem; letter-spacing: 1px; text-transform: uppercase; text-decoration: none; padding: 0.3rem 0.8rem; border-radius: 4px; }
+
+    {% block extra_css %}{% endblock %}
+
+    /* MOBILE */
+    @media (max-width: 768px) {
+        body { overflow-x: hidden; }
+        body { overflow-y: auto ; }
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.aberto { transform: translateX(0); }
+      .topbar { display: flex; }
+      .conteudo { margin-left: 0; padding: 1.2rem; padding-top: 72px; }
+      .page-header h2 { font-size: 1.4rem; }
+      
+
+      /* TABELA VIRA CARD */
+      table thead { display: none; }
+      table, tbody, tr, td { display: block; width: 100%; }
+      tr { background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 1rem; padding: 1rem; }
+      td { border: none; padding: 0.4rem 0; font-size: 0.88rem; display: flex; justify-content: space-between; align-items: center; }
+      td::before { content: attr(data-label); font-size: 0.7rem; letter-spacing: 1px; text-transform: uppercase; color: #999; flex-shrink: 0; margin-right: 1rem; }
+      .acoes { justify-content: flex-start; gap: 0.5rem; padding-top: 0.5rem; }
+      .acoes a, .acoes button { padding: 0.6rem 1rem; font-size: 0.75rem; }
+      .secao { padding: 0; background: transparent; box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOPBAR MOBILE -->
+  <div class="topbar">
+    <button class="btn-menu" onclick="toggleMenu()">☰</button>
+    <span class="topbar-logo">Ari Pratas</span>
+  </div>
+
+  <!-- OVERLAY -->
+  <div class="overlay" id="overlay" onclick="fecharMenu()"></div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <h1>Ari Pratas</h1>
+      <p>Painel Admin</p>
+    </div>
+  <nav>
+    <a href="{% url 'painel:dashboard' %}" {% if request.resolver_match.url_name == 'dashboard' %}class="ativo"{% endif %} onclick="fecharMenu()">Dashboard</a>
+    <a href="{% url 'painel:pedidos_lista' %}" {% if 'pedido' in request.resolver_match.url_name %}class="ativo"{% endif %} onclick="fecharMenu()">Pedidos</a>
+    <a href="{% url 'painel:categorias_lista' %}" {% if 'categoria' in request.resolver_match.url_name %}class="ativo"{% endif %} onclick="fecharMenu()">Categorias</a>
+    <a href="{% url 'painel:produtos_lista' %}" {% if 'produto' in request.resolver_match.url_name %}class="ativo"{% endif %} onclick="fecharMenu()">Produtos</a>
+    <a href="{% url 'painel:cupons_lista' %}" {% if 'cupom' in request.resolver_match.url_name %}class="ativo"{% endif %} onclick="fecharMenu()">Cupons</a>
+    <a href="{% url 'painel:feedbacks_lista' %}" {% if 'feedback' in request.resolver_match.url_name %}class="ativo"{% endif %} onclick="fecharMenu()">Feedbacks</a>
+</nav>
+    <div class="sidebar-footer">
+      <form method="post" action="{% url 'loja:logout' %}">
+        {% csrf_token %}
+        <button type="submit" style="background:none; border:none; color:#555; cursor:pointer; font-size:0.75rem; letter-spacing:1px; text-transform:uppercase;">Sair</button>
+      </form>
+    </div>
+  </aside>
+
+  <main class="conteudo">
+    {% block content %}{% endblock %}
+  </main>
+
+  <script>
+    function toggleMenu() {
+      document.getElementById('sidebar').classList.toggle('aberto');
+      document.getElementById('overlay').classList.toggle('ativo');
+    }
+    function fecharMenu() {
+      document.getElementById('sidebar').classList.remove('aberto');
+      document.getElementById('overlay').classList.remove('ativo');
+    }
+  </script>
+
+</body>
+</html> 

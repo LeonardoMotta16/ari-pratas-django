@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Contato — Ari Pratas{% endblock %}
+{% block content %}
+
+<section class="section">
+  <div style="max-width:600px; margin:0 auto;">
+    <h2 class="section-titulo">Fale Conosco</h2>
+    <p class="section-subtitulo">Estamos aqui para te ajudar!</p>
+
+    <div class="form-card form-card--largo">
+      <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+          <label class="form-label">Nome</label>
+          <input type="text" name="nome" placeholder="Seu nome" class="form-input">
+        </div>
+        <div class="form-group">
+          <label class="form-label">E-mail</label>
+          <input type="email" name="email" placeholder="seu@email.com" class="form-input">
+        </div>
+        <div class="form-group" style="margin-bottom:1.5rem;">
+          <label class="form-label">Mensagem</label>
+          <textarea name="mensagem" rows="5" placeholder="Como podemos te ajudar?" class="form-textarea"></textarea>
+        </div>
+        <button type="submit" class="btn-primary btn-block">Enviar Mensagem</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

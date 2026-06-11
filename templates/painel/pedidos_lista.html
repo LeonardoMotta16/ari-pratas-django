@@ -1,0 +1,95 @@
+{% extends 'painel/base.html' %}
+
+{% block title %}Pedidos{% endblock %}
+
+{% block extra_css %}
+.abas { display:flex; gap:0.5rem; margin-bottom:1.5rem; flex-wrap:wrap; }
+.aba { padding:0.6rem 1.2rem; border:none; border-radius:4px; cursor:pointer; font-family:'Georgia',serif; font-size:0.78rem; letter-spacing:1px; text-transform:uppercase; background:#eee; color:#666; }
+.aba.ativa { background:#962b68; color:white; }
+.painel-aba { display:none; }
+.painel-aba.ativo { display:block; }
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h2>Pedidos</h2>
+</div>
+
+<div class="abas">
+  <button class="aba ativa" onclick="trocarAba('ativos', this)">Em andamento</button>
+  <button class="aba" onclick="trocarAba('concluidos', this)">Concluídos</button>
+</div>
+
+<!-- ATIVOS -->
+<div class="painel-aba ativo" id="aba-ativos">
+  <div class="secao">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th><th>Cliente</th><th>Email</th><th>Telefone</th><th>Total</th><th>Data</th><th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for pedido in pedidos %}
+        {% if not pedido.rastreio_enviado %}
+        <tr>
+          <td data-label="#">#{{ pedido.id }}</td>
+          <td data-label="Cliente">{{ pedido.nome }}</td>
+          <td data-label="Email">{{ pedido.email }}</td>
+          <td data-label="Telefone">{{ pedido.telefone|default:"—" }}</td>
+          <td data-label="Total">R$ {{ pedido.total }}</td>
+          <td data-label="Data">{{ pedido.criado_em|date:"d/m/Y H:i" }}</td>
+          <td data-label=" " class="acoes">
+            <a href="{% url 'painel:pedido_detalhe' pedido.id %}" class="btn-ver">Ver</a>
+          </td>
+        </tr>
+        {% endif %}
+        {% empty %}
+        <tr><td colspan="7" style="text-align:center; color:#bbb; padding:2rem;">Nenhum pedido.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- CONCLUÍDOS -->
+<div class="painel-aba" id="aba-concluidos">
+  <div class="secao">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th><th>Cliente</th><th>Email</th><th>Total</th><th>Rastreio</th><th>Data</th><th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for pedido in pedidos %}
+        {% if pedido.rastreio_enviado %}
+        <tr>
+          <td data-label="#">#{{ pedido.id }}</td>
+          <td data-label="Cliente">{{ pedido.nome }}</td>
+          <td data-label="Email">{{ pedido.email }}</td>
+          <td data-label="Total">R$ {{ pedido.total }}</td>
+          <td data-label="Rastreio">{{ pedido.codigo_rastreio }}</td>
+          <td data-label="Data">{{ pedido.criado_em|date:"d/m/Y" }}</td>
+          <td data-label=" " class="acoes">
+            <a href="{% url 'painel:pedido_detalhe' pedido.id %}" class="btn-ver">Ver</a>
+          </td>
+        </tr>
+        {% endif %}
+        {% empty %}
+        <tr><td colspan="7" style="text-align:center; color:#bbb; padding:2rem;">Nenhum pedido concluído.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+function trocarAba(nome, btn) {
+  document.querySelectorAll('.painel-aba').forEach(el => el.classList.remove('ativo'));
+  document.querySelectorAll('.aba').forEach(el => el.classList.remove('ativa'));
+  document.getElementById('aba-' + nome).classList.add('ativo');
+  btn.classList.add('ativa');
+}
+</script>
+{% endblock %}

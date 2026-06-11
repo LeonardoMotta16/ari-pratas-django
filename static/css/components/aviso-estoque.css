@@ -1,0 +1,93 @@
+/* ==============================
+   AVISO FORA DE ESTOQUE
+   ============================== */
+.estoque-aviso {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 2.5rem 2rem;
+  background: #fff8f8;
+  border: 1.5px solid #f5c6cb;
+  border-radius: var(--raio);
+  margin-top: 1.5rem;
+  gap: 1rem;
+}
+
+.estoque-aviso__icone {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--vermelho-erro);
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.estoque-aviso__titulo {
+  font-family: var(--fonte-corpo);
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--vermelho-erro);
+  margin: 0;
+}
+
+.estoque-aviso__texto {
+  font-size: 0.88rem;
+  color: var(--texto-claro);
+  margin: 0;
+  max-width: 300px;
+  line-height: 1.5;
+}
+
+.estoque-aviso__form {
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
+  max-width: 380px;
+  margin-top: 0.25rem;
+}
+
+.estoque-aviso__input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: 1.5px solid #ddd;
+  border-radius: var(--raio);
+  font-family: var(--fonte-corpo);
+  font-size: 0.9rem;
+  color: var(--texto);
+  background: white;
+  outline: none;
+  transition: border-color 0.2s;
+  min-width: 0; /* evita overflow no flex */
+}
+.estoque-aviso__input:focus {
+  border-color: var(--vinho);
+  box-shadow: 0 0 0 3px rgba(150, 43, 104, 0.1);
+}
+.estoque-aviso__input::placeholder {
+  color: #bbb;
+}
+
+.estoque-aviso__btn {
+  padding: 0.75rem 1.25rem;
+  background: var(--vinho);
+  color: white;
+  border: none;
+  border-radius: var(--raio);
+  font-family: var(--fonte-corpo);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background var(--transicao);
+}
+.estoque-aviso__btn:hover {
+  background: var(--vinho-escuro);
+}

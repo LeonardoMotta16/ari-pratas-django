@@ -1,0 +1,115 @@
+/* ==============================
+   BASE.CSS — Reset, Body, Animações
+   e classes utilitárias globais.
+   Não contém componentes específicos.
+   ============================== */
+
+/* --- Reset --- */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* --- Body --- */
+body {
+  font-family: var(--fonte-corpo);
+  background: var(--creme);
+  color: var(--texto);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* --- Foco acessível (nunca remover!) --- */
+:focus-visible {
+  outline: 2px solid var(--vinho);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* --- Main --- */
+main {
+  animation: fadeIn 0.5s ease both;
+}
+
+/* --- Animações globais --- */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes escalaEntrada {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* --- Scroll Reveal --- */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visivel {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal:nth-child(2) { transition-delay: 0.08s; }
+.reveal:nth-child(3) { transition-delay: 0.16s; }
+.reveal:nth-child(4) { transition-delay: 0.24s; }
+.reveal:nth-child(5) { transition-delay: 0.10s; }
+.reveal:nth-child(6) { transition-delay: 0.18s; }
+
+/* --- Seções --- */
+.section {
+  padding: 5rem 5%;
+}
+.section-label {
+  text-align: center;
+  color: var(--vinho);
+  font-size: 0.7rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+.section-titulo {
+  font-family: var(--fonte-titulo);
+  font-size: 3rem;
+  text-align: center;
+  color: var(--texto);
+  font-weight: 300;
+  font-style: italic;
+  margin-bottom: 0.5rem;
+}
+.section-subtitulo {
+  text-align: center;
+  color: var(--texto-claro);
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+.section-divisor {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 3rem;
+  color: var(--vinho);
+  font-size: 0.6rem;
+}
+.section-divisor::before,
+.section-divisor::after {
+  content: '';
+  width: 60px;
+  height: 1px;
+  background: #ddd;
+}
+
+@media (max-width: 768px) {
+  .section { padding: 3rem 4%; }
+  .section-titulo { font-size: 2rem; }
+}

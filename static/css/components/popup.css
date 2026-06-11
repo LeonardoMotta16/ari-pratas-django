@@ -1,0 +1,58 @@
+/* ==============================
+   POPUP FEEDBACK
+   ============================== */
+.popup-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+}
+.popup-overlay.aberto { display: flex; }
+
+.popup-box {
+  background: white;
+  border-radius: var(--raio);
+  padding: 2.5rem;
+  max-width: 480px;
+  width: 90%;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+.popup-fechar {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #999;
+  line-height: 1;
+}
+
+.popup-label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--vinho);
+  margin-bottom: 0.5rem;
+}
+.popup-titulo {
+  font-family: var(--fonte-titulo);
+  font-size: 1.6rem;
+  margin-bottom: 0.3rem;
+}
+.popup-desc { color: var(--texto-claro); font-size: 0.9rem; margin-bottom: 1.5rem; }
+
+.popup-sucesso { display: none; text-align: center; padding: 1rem 0; }
+.popup-sucesso-icone { font-size: 3rem; margin-bottom: 1rem; }
+.popup-sucesso-titulo {
+  font-family: var(--fonte-titulo);
+  color: var(--vinho);
+  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
+}
+.popup-sucesso-desc { color: var(--texto-claro); }

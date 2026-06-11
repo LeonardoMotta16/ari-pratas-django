@@ -1,0 +1,47 @@
+{% extends 'painel/base.html' %}
+
+{% block title %}Categorias{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h2>Categorias</h2>
+  <a href="{% url 'painel:categoria_criar' %}" class="btn-novo">+ Nova Categoria</a>
+</div>
+
+<div class="secao">
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Ícone</th>
+        <th>Nome</th>
+        <th>Slug</th>
+        <th>Produtos</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for categoria in categorias %}
+      <tr>
+        <td>{{ categoria.id }}</td>
+        <td style="font-size:1.3rem;">{{ categoria.icone }}</td>
+        <td>{{ categoria.nome }}</td>
+        <td style="color:#999; font-size:0.8rem;">{{ categoria.slug }}</td>
+        <td>{{ categoria.produto_set.count }}</td>
+        <td class="acoes">
+          <a href="{% url 'painel:categoria_editar' categoria.id %}" class="btn-editar">Editar</a>
+          <form method="post" action="{% url 'painel:categoria_deletar' categoria.id %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn-deletar" onclick="return confirm('Deletar {{ categoria.nome }}?')">Deletar</button>
+          </form>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="6" style="text-align:center; color:#bbb; padding:2rem;">Nenhuma categoria cadastrada.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

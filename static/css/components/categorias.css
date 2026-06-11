@@ -1,0 +1,26 @@
+/* ==============================
+   CATEGORIAS
+   ============================== */
+.categorias-barra {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  background: white;
+  border-bottom: 1px solid #eee;
+}
+.categoria-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.8rem 1rem;
+  text-decoration: none;
+  color: var(--texto);
+  border-right: 1px solid #eee;
+  transition: all var(--transicao);
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  gap: 0.5rem;
+}
+.categoria-item:hover { background: var(--creme); color: var(--vinho); }
+.categoria-item .icone { font-size: 1.8rem; transition: transform 0.3s ease; }
+.categoria-item:hover .icone { transform: scale(1.2) rotate(-5deg); }

@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}Cadastro — Ari Pratas{% endblock %}
+{% block content %}
+
+<div class="pagina-form">
+  <div class="form-card">
+    <div class="form-header">
+      <p class="form-header-label">Crie sua conta</p>
+      <h2 class="form-header-titulo">Cadastro</h2>
+    </div>
+
+    {% if erros %}
+    <ul class="form-erro-lista">
+      {% for erro in erros %}<li>{{ erro }}</li>{% endfor %}
+    </ul>
+    {% endif %}
+
+    <form method="post">
+      {% csrf_token %}
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Nome</label>
+          <input type="text" name="first_name" value="{{ post.first_name|default:'' }}" required class="form-input">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Sobrenome</label>
+          <input type="text" name="last_name" value="{{ post.last_name|default:'' }}" required class="form-input">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input type="email" name="email" value="{{ post.email|default:'' }}" required class="form-input">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Senha</label>
+        <input type="password" name="password1" class="form-input">
+      </div>
+      <div class="form-group" style="margin-bottom:2rem;">
+        <label class="form-label">Confirmar Senha</label>
+        <input type="password" name="password2" class="form-input">
+      </div>
+      <button type="submit" class="btn-primary btn-block">Criar Conta</button>
+    </form>
+
+    <p class="form-rodape">
+      Já tem conta? <a href="{% url 'loja:login' %}" class="form-link">Entrar</a>
+    </p>
+  </div>
+</div>
+
+{% endblock %}
